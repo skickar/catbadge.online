@@ -1,0 +1,143 @@
+{
+  "_note": "Firmware catalog for the badge site. All hosted builds are served same-origin from firmware/ (browsers CORS-block raw github fetches). Entries with builds[] empty are flashed via their release page + FLASH LOCAL .BIN.",
+  "firmware": [
+    {
+      "id": "launcher",
+      "mark": "=^..^=",
+      "name": "Badge Launcher v2 \"Touch\"",
+      "ver": "v2.0.0",
+      "desc": "The flagship badge experience. One flash + one FAT micro-SD = pick-what-you-run: two touch mesh messengers (MeshCore + Meshtastic MUI), classic Meshtastic, a Reticulum RNode, an NES emulator with 37 homebrew games, and WLEDkitty — switchable from an on-badge menu in ~10 s.",
+      "buildsLine": "flash at scriptkitty.sh or from the v2.0.0 release · needs FAT micro-SD",
+      "docs": "https://github.com/RetiaLLC/badge-launcher",
+      "src": "https://github.com/RetiaLLC/badge-launcher",
+      "page": "https://github.com/RetiaLLC/badge-launcher/releases/tag/v2.0.0",
+      "note": "Hold UP at reset to get back to the launcher from any guest. Nine lives, one badge.",
+      "builds": []
+    },
+    {
+      "id": "doom",
+      "logo": "assets/logo-doom.jpg",
+      "name": "DOOM",
+      "ver": "prboom 2.5.0",
+      "desc": "The 1993 classic, natively, full speed — 320x240 fullscreen, shareware WAD memory-mapped out of flash. D-pad moves, A fires, BOOT switches weapons. Audio build plays SFX through the piezo.",
+      "buildsLine": "2 builds: audio · silent",
+      "docs": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/doom",
+      "src": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/doom",
+      "builds": [
+        { "file": "doom-audio.factory.bin", "label": "SFX through the piezo — gloriously PC-speaker", "url": "firmware/doom-audio.factory.bin", "addr": 0 },
+        { "file": "doom-silent.factory.bin", "label": "mute — same game otherwise", "url": "firmware/doom-silent.factory.bin", "addr": 0 }
+      ]
+    },
+    {
+      "id": "anemoia",
+      "logo": "assets/logo-anemoia.png",
+      "name": "Anemoia NES",
+      "ver": "v1.0.0",
+      "desc": "A full NES emulator: drop .nes ROMs on the micro-SD, browse and launch on-badge, play with D-pad + A/B. Save states, chiptune audio through the piezo, curated legally-free homebrew library.",
+      "buildsLine": "1 build on the anemoia-v1.0.0 release",
+      "docs": "https://github.com/RetiaLLC/Anemoia-DefconBadge",
+      "src": "https://github.com/RetiaLLC/Anemoia-DefconBadge",
+      "page": "https://github.com/RetiaLLC/Anemoia-DefconBadge/releases/latest",
+      "note": "ROMs: https://github.com/RetiaLLC/Anemoia-DefconBadge/blob/main/GAMES.md",
+      "builds": []
+    },
+    {
+      "id": "meshtastic",
+      "logo": "assets/logo-meshtastic.svg",
+      "name": "Meshtastic",
+      "ver": "2.7.23",
+      "desc": "Off-grid LoRa mesh messaging with phone app support. Standard, power-tuned (-39% idle), and experimental full color touch UI (MUI) builds. Set your region before use: meshtastic --set lora.region US",
+      "buildsLine": "3 builds: standard · lowpower · mui-touch",
+      "docs": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/meshtastic",
+      "src": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/meshtastic",
+      "note": "ANTENNA FIRST. Never TX on LoRa without a 915 MHz antenna attached.",
+      "builds": [
+        { "file": "meshtastic-2.7.23-standard.factory.bin", "label": "stock behavior, classic button-driven TFT UI", "url": "firmware/meshtastic-2.7.23-standard.factory.bin", "addr": 0 },
+        { "file": "meshtastic-2.7.23-lowpower.factory.bin", "label": "daily driver — idle draw cut ~39%, B = back", "url": "firmware/meshtastic-2.7.23-lowpower.factory.bin", "addr": 0 },
+        { "file": "meshtastic-2.7.23-mui-touch.factory.bin", "label": "color touch UI, on-screen keyboard (BLE off, phone via WiFi/TCP)", "url": "firmware/meshtastic-2.7.23-mui-touch.factory.bin", "addr": 0 }
+      ]
+    },
+    {
+      "id": "meshcore",
+      "logo": "assets/logo-meshcore.png",
+      "name": "MeshCore",
+      "ver": "v1.16.0",
+      "desc": "The badge as a MeshCore LoRa mesh node — the flagship build is a standalone touchscreen mesh communicator (chats, contacts, channels, on-screen keyboard, RF monitor + spectrum analyzer) that is simultaneously a BLE companion for the phone app.",
+      "buildsLine": "3 builds: touch-messenger · companion-ble · companion-usb",
+      "docs": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/meshcore",
+      "src": "https://github.com/RetiaLLC/MeshCore/tree/retia-badge",
+      "note": "Factory images, not launcher SD guests — flash over USB. Hold UP at reset to return to the launcher.",
+      "builds": [
+        { "file": "meshcore-touch-messenger.factory.bin", "label": "the one to use — full touchscreen mesh communicator", "url": "firmware/meshcore-touch-messenger.factory.bin", "addr": 0 },
+        { "file": "meshcore-companion-ble.factory.bin", "label": "radio for the MeshCore phone app (BLE)", "url": "firmware/meshcore-companion-ble.factory.bin", "addr": 0 },
+        { "file": "meshcore-companion-usb.factory.bin", "label": "companion over USB serial for meshcore-cli / web client", "url": "firmware/meshcore-companion-usb.factory.bin", "addr": 0 }
+      ]
+    },
+    {
+      "id": "reticulum",
+      "logo": "assets/logo-reticulum.png",
+      "name": "Reticulum / RNode",
+      "ver": "v1.85",
+      "desc": "Turns the badge into an RNode: a host-controlled 915 MHz LoRa transceiver for the Reticulum network stack (NomadNet, Sideband, MeshChat). TFT build shows a live status screen — frequency, airtime, channel load, signal.",
+      "buildsLine": "2 builds: tft · headless — then provision once with rnodeconf",
+      "docs": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/reticulum",
+      "src": "https://github.com/RetiaLLC/NibbleReticulum",
+      "note": "After flashing: rnodeconf <PORT> -r --platform 80 --product f0 --model fe --hwrev 1",
+      "builds": [
+        { "file": "rnode-1.85-tft.factory.bin", "label": "recommended — live RNode status screen on the TFT", "url": "firmware/rnode-1.85-tft.factory.bin", "addr": 0 },
+        { "file": "rnode-1.85.factory.bin", "label": "same firmware, headless (display dark)", "url": "firmware/rnode-1.85.factory.bin", "addr": 0 }
+      ]
+    },
+    {
+      "id": "rsdeck",
+      "mark": "rs",
+      "name": "rsDeck",
+      "ver": "retia-badge",
+      "desc": "Ratspeak's Reticulum/LXMF messenger ported to the badge as a standalone on-device communicator — touch UI with on-screen keyboard, D-pad + A/B nav, per-conversation drafts, piezo chimes, BOOT = announce. Runs as a factory image or as a ratspeak.bin SD-launcher guest.",
+      "buildsLine": "2 images: standalone factory · ratspeak.bin launcher guest · AGPL-3.0",
+      "docs": "https://github.com/ratspeak/rsDeck",
+      "src": "https://github.com/ratspeak/rsDeck",
+      "page": "https://github.com/ratspeak/rsDeck",
+      "note": "Defaults to the 914.875 MHz / 125 kHz / SF7 house channel — interoperates with fleet RNodes out of the box. Changeable in Setup.",
+      "builds": []
+    },
+    {
+      "id": "wledkitty",
+      "logo": "assets/logo-wled.png",
+      "logoCover": true,
+      "name": "WLEDkitty",
+      "ver": "WLED fork",
+      "desc": "A WLED fork designed to run on the badge — drive the ten NeoPixel ears (and anything on the NeoPixel-out header) from the WLED web UI or phone app. Boots into a pride rainbow; A/B + d-pad switch effects on the go, with live status on the TFT.",
+      "buildsLine": "flash at scriptkitty.sh · runs as a launcher SD guest too",
+      "docs": "https://github.com/RetiaLLC/WLED",
+      "src": "https://github.com/RetiaLLC/WLED",
+      "page": "https://scriptkitty.sh",
+      "builds": []
+    },
+    {
+      "id": "templeos",
+      "logo": "assets/logo-templeos.png",
+      "name": "TempleOS Portable",
+      "ver": "640×480",
+      "desc": "Terry Davis's divine operating system goes portable — HolyC, the oracle, and 16-color glory on the badge TFT. God said 640×480 was enough.",
+      "buildsLine": "flash from the release page — divine intervention not required",
+      "docs": "https://github.com/RetiaLLC/DefconBadge2026",
+      "src": "https://github.com/RetiaLLC/DefconBadge2026",
+      "page": "https://github.com/RetiaLLC/DefconBadge2026/releases",
+      "builds": []
+    },
+    {
+      "id": "bitpirate",
+      "logo": "assets/logo-bitpirate.png",
+      "name": "ESP32 Bit Pirate",
+      "ver": "Bus Pirate-style",
+      "desc": "A Bus Pirate-inspired multi-protocol workbench — one CLI (USB serial, Wi-Fi web UI, or browser Web Serial) that speaks I2C, SPI, UART, JTAG/SWD, CAN, 1-Wire, infrared, Sub-GHz and more. Scan, sniff, dump, flash, and automate it from Python. Every bus needs a driver.",
+      "buildsLine": "flash the s3 dev-kit build from the Bit Pirate web flasher · mind the badge pin map",
+      "docs": "https://github.com/geo-tp/ESP32-Bit-Pirate/wiki",
+      "src": "https://github.com/geo-tp/ESP32-Bit-Pirate",
+      "page": "https://geo-tp.github.io/ESP32-Bit-Pirate/webflasher/",
+      "note": "Any 8 MB ESP32-S3 runs it — the badge qualifies. Default pins target the dev-kit, so check the badge pinout before wiring targets.",
+      "builds": []
+    }
+  ]
+}

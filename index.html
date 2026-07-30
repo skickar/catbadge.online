@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScriptKitty DEF CON Badge — getting started</title>
+<meta name="description" content="The badge with nine lives. Getting started, in-browser flashing, serial monitor, firmware catalog, hardware specs and case-design kit for the ScriptKitty DEF CON Badge by Retia LLC × IoT Village.">
+<meta property="og:title" content="ScriptKitty DEF CON Badge">
+<meta property="og:description" content="The badge with nine lives — flash it, mesh with it, build it a house.">
+<meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
+<meta property="og:url" content="https://www.catbadge.online/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="module">
+import { ESPLoader, Transport } from "./vendor/esptool-bundle.js";
+window.esptooljs = { ESPLoader, Transport };
+</script>
+<script type="module" src="vendor/model-viewer.min.js"></script>
+</head>
+<body>
+<div style="font-family:'Archivo',sans-serif; background:#faf9f5; color:#3c443f; min-height:100vh; font-size:15px; line-height:1.65;">
+
+  <nav style="position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:28px; padding:14px 36px; background:rgba(250,249,245,0.94); backdrop-filter:blur(8px); border-bottom:1px solid #e2ddd0; flex-wrap:wrap;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-weight:600; color:#14181b; font-size:15px;">=^..^= <span style="color:#00a35f;">SCRIPTKITTY</span>//BADGE</span>
+    <div style="display:flex; gap:24px; flex-wrap:wrap; font-size:14px; font-weight:600; margin-left:auto;">
+      <a href="#start" class="nav-link">Start</a>
+      <a href="#mesh" class="nav-link">Mesh</a>
+      <a href="#flash" class="nav-link">Flash</a>
+      <a href="#serial" class="nav-link">Serial</a>
+      <a href="#firmware" class="nav-link">Firmware</a>
+      <a href="#hardware" class="nav-link">Hardware</a>
+      <a href="#links" class="nav-link">Community</a>
+      <a href="https://github.com/RetiaLLC/DefconBadge2026" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+    </div>
+    <a href="#flash" class="btn-dark" style="font-size:13px; padding:9px 18px; border-radius:8px;">[ flash ]</a>
+  </nav>
+
+  <header style="max-width:1140px; margin:0 auto; padding:92px 36px 72px; display:grid; grid-template-columns:1.15fr 1fr; gap:56px; align-items:center;" class="grid-hero">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:18px;">retia@badge26:~$ cat readme.md<span style="display:inline-block; width:8px; height:14px; background:#00a35f; margin-left:6px; vertical-align:-2px; animation:blinkc 1.1s step-end infinite;"></span></div>
+      <h1 style="margin:0 0 10px; font-size:60px; line-height:0.98; color:#14181b; font-weight:900; letter-spacing:-2.5px;">ScriptKitty<br>DEF CON Badge</h1>
+      <div style="font-size:22px; font-weight:700; color:#00a35f; margin-bottom:18px; letter-spacing:-0.3px;">The badge with nine lives.</div>
+      <div style="font-size:14px; font-weight:600; color:#14181b; margin-bottom:18px;">By <a href="https://retia.io" target="_blank" rel="noopener">Retia LLC</a> in partnership with <a href="https://www.iotvillage.org" target="_blank" rel="noopener">IoT Village</a> for DEF CON.</div>
+      <p style="margin:0 0 16px; max-width:52ch; font-size:16px;">This handsome radio cat is an ESP32-S3 with a color touchscreen, a 915&nbsp;MHz LoRa radio, ten NeoPixels, and a piezo that plays sound effects.</p>
+      <p style="margin:0 0 30px; max-width:52ch; font-size:16px;">It's built for DEF CON 2026 to make hacking the mesh easy for beginners, and to give everyone the agency to choose how they communicate in an uncertain future.</p>
+      <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
+        <a href="#flash" class="btn-dark" style="font-size:15px; padding:15px 28px; border-radius:10px;">[ flash the badge ]</a>
+        <a href="#start" class="btn-outline" style="font-family:'Archivo',sans-serif; font-weight:700; font-size:15px; padding:15px 24px; border-radius:10px;">Getting started</a>
+      </div>
+      <div style="margin-top:24px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a;">// flashing and the serial monitor run on any browser supporting Web Serial.<br>// made in the USA by real catboys and catgirls.</div>
+    </div>
+    <div style="user-select:none;">
+      <div id="spin-stage" style="perspective:1500px; cursor:grab; touch-action:none;">
+        <div id="spin-card" style="position:relative; width:100%; aspect-ratio:1/1; transform-style:preserve-3d; will-change:transform;">
+          <img src="assets/badge-top-clean.png" alt="" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; transform:translateZ(-7px); filter:brightness(0.28) saturate(0.5);">
+          <img src="assets/badge-top-clean.png" alt="" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; transform:translateZ(-3.5px); filter:brightness(0.28) saturate(0.5);">
+          <img src="assets/badge-top-clean.png" alt="" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; transform:translateZ(0px); filter:brightness(0.28) saturate(0.5);">
+          <img src="assets/badge-top-clean.png" alt="" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; transform:translateZ(3.5px); filter:brightness(0.28) saturate(0.5);">
+          <img src="assets/badge-top-clean.png" alt="" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; transform:translateZ(7px); filter:brightness(0.28) saturate(0.5);">
+          <img src="assets/badge-top-clean.png" alt="Badge top — KiCad render" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; backface-visibility:hidden; transform:translateZ(10px);">
+          <img src="assets/badge-bottom-clean.png" alt="Badge bottom — KiCad render" draggable="false" style="position:absolute; inset:0; width:100%; height:100%; backface-visibility:hidden; transform:rotateY(180deg) translateZ(10px);">
+          <img src="assets/screen-cat.jpg" alt="On-screen content" draggable="false" style="position:absolute; left:36.4%; top:42.8%; width:34.4%; height:26.3%; object-fit:cover; backface-visibility:hidden; transform:translateZ(10.5px); image-rendering:pixelated; filter:contrast(1.25) saturate(1.5) brightness(0.95);">
+          <div style="position:absolute; left:36.4%; top:42.8%; width:34.4%; height:26.3%; pointer-events:none; backface-visibility:hidden; transform:translateZ(10.6px); background:repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0px, rgba(0,0,0,0.22) 1px, transparent 1px, transparent 3px), radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35) 100%);"></div>
+        </div>
+      </div>
+      <div style="margin-top:6px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a; text-align:center;">$ spin, flip, and poke him to see more — or <a href="#case">download the 3D model</a> and make a case!</div>
+    </div>
+  </header>
+
+  <section id="start" style="border-top:1px solid #e2ddd0;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[01] // getting_started</div>
+      <h2 style="margin:0 0 14px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">Send off-grid, encrypted messages to your friends in 5 steps</h2>
+      <p style="margin:0 0 44px; max-width:62ch; font-size:16px;">Your cyber cat is ready to yowl on the mesh! Here's how to get your radio meowing.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start;" class="grid-2col">
+        <ol style="list-style:none; margin:0; padding:0; display:grid; gap:26px;">
+          <li style="display:grid; grid-template-columns:52px 1fr; gap:18px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; color:#00a35f;">01</span>
+            <span><strong style="color:#14181b; font-size:16px;">Power up.</strong><br>2×AA batteries (switch on the back) or USB-C — auto-switching, USB wins when both are present.</span>
+          </li>
+          <li style="display:grid; grid-template-columns:52px 1fr; gap:18px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; color:#00a35f;">02</span>
+            <span><strong style="color:#14181b; font-size:16px;">Antenna first.</strong><br>Your antenna should be pre-installed, but make sure it's there <em style="color:#c77d00;">before</em> transmitting. RX is safe; TX into nothing can cook the radio's PA.</span>
+          </li>
+          <li style="display:grid; grid-template-columns:52px 1fr; gap:18px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; color:#00a35f;">03</span>
+            <span><strong style="color:#14181b; font-size:16px;">Plug into USB-C.</strong><br>The S3's native USB shows up as a serial port — no drivers. macOS: <code class="chip">/dev/cu.usbmodem*</code>, Linux: <code class="chip">/dev/ttyACM0</code>, Windows: <code class="chip">COMx</code>.</span>
+          </li>
+          <li style="display:grid; grid-template-columns:52px 1fr; gap:18px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; color:#00a35f;">04</span>
+            <span><strong style="color:#14181b; font-size:16px;">Flash your firmware.</strong><br>Flash any standalone image <a href="#flash">from here</a> or <a href="https://scriptkitty.sh" target="_blank" rel="noopener">scriptkitty.sh</a> — or try the Badge Launcher to run multiple at once if you have an SD card.</span>
+          </li>
+          <li style="display:grid; grid-template-columns:52px 1fr; gap:18px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; color:#00a35f;">05</span>
+            <span><strong style="color:#14181b; font-size:16px;">Send encrypted messages to friends off-grid.</strong><br>Set your region and start transmitting in your mesh networking app of choice!</span>
+          </li>
+        </ol>
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:28px 30px; align-self:start;">
+          <div style="font-family:'IBM Plex Mono',monospace; color:#d6008f; font-weight:600; font-size:14px; margin-bottom:18px;">!! badge quirks that can bite you</div>
+          <ol style="margin:0; padding-left:20px; display:grid; gap:16px; font-size:14px;">
+            <li><strong style="color:#14181b;">Crossed touch lines.</strong> The touch controller and display-module SD slot have swapped MISO/MOSI — hardware SPI can't reach them. Use the dedicated SD slot (CS&nbsp;10); firmware here already works around touch.</li>
+            <li><strong style="color:#14181b;">The QWIIC connector is mounted backwards.</strong> Check the <a href="#hardware">pinout</a> and hand-wire QWIIC sensors instead of trusting the plug.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mesh" style="border-top:1px solid #e2ddd0;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[02] // choose_your_mesh</div>
+      <h2 style="margin:0 0 14px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">Choose how you communicate</h2>
+      <div style="display:flex; gap:32px; align-items:center; margin-bottom:44px; flex-wrap:wrap;">
+        <div role="img" aria-label="LoRa Alliance logo" style="width:180px; height:52px; background-image:url('assets/logo-lora-alliance.svg'); background-size:contain; background-position:center; background-repeat:no-repeat; flex-shrink:0;"></div>
+        <p style="margin:0; max-width:62ch; font-size:16px; flex:1; min-width:320px;">The badge is your beginner guide to <strong style="color:#14181b;">LoRa</strong> — a radio that talks over very long distances: a lower data rate than Wi-Fi, but much longer range. Meshtastic, MeshCore, and Reticulum are three decentralized, encrypted takes on off-grid communication built on it — no towers, no accounts, no middlemen. The badge runs all three, so you can explore each and decide for yourself.</p>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px;" class="grid-3col">
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:34px; height:34px; background-image:url('assets/logo-meshtastic.svg'); background-size:contain; background-position:center; background-repeat:no-repeat;"></div>
+            <div>
+              <div style="color:#14181b; font-weight:800; font-size:20px; letter-spacing:-0.5px;">Meshtastic</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#00a35f; font-weight:600;">beginner friendly</div>
+            </div>
+          </div>
+          <div style="font-size:14px;">Best for small groups of friends, ad-hoc networks, and mobile nodes — road trips to remote areas, events, anywhere without cell service. Pair it with the phone app and you're meshing in minutes.</div>
+          <div style="border-top:1px solid #e2ddd0; padding-top:12px; margin-top:auto;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#c77d00; font-weight:600; margin-bottom:6px;">!! watch out for</div>
+            <div style="font-size:13px;">Every device transmits and repeats everyone else, so channels congest easily — and hop limits make it a poor fit for permanent infrastructure.</div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:34px; height:34px; background-image:url('assets/logo-meshcore.png'); background-size:contain; background-position:center; background-repeat:no-repeat;"></div>
+            <div>
+              <div style="color:#14181b; font-weight:800; font-size:20px; letter-spacing:-0.5px;">MeshCore</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#00a35f; font-weight:600;">beginner friendly</div>
+            </div>
+          </div>
+          <div style="font-size:14px;">Runs on the same hardware as Meshtastic, but only designated nodes repeat — so it scales. Good for permanent infrastructure, with support for 50+ hops across a network.</div>
+          <div style="border-top:1px solid #e2ddd0; padding-top:12px; margin-top:auto;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#c77d00; font-weight:600; margin-bottom:6px;">!! watch out for</div>
+            <div style="font-size:13px;">Not every node repeats, so coverage needs dedicated repeaters. A newer project — with some drama in the developer community.</div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:34px; height:34px; background-image:url('assets/logo-reticulum.png'); background-size:contain; background-position:center; background-repeat:no-repeat;"></div>
+            <div>
+              <div style="color:#14181b; font-weight:800; font-size:20px; letter-spacing:-0.5px;">Reticulum</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#d6008f; font-weight:600;">power user</div>
+            </div>
+          </div>
+          <div style="font-size:14px;">A full network stack that's agnostic to the radio — LoRa, Wi-Fi, and more. Run the badge as a standalone messenger with rsDeck, or as an RNode plugged into a Reticulum host. Goes far beyond texting: voice chat, photos, even hosting basic sites.</div>
+          <div style="border-top:1px solid #e2ddd0; padding-top:12px; margin-top:auto;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#c77d00; font-weight:600; margin-bottom:6px;">!! watch out for</div>
+            <div style="font-size:13px;">Not beginner friendly — more moving parts to set up and a host to run. The versatility is the reward.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:24px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a;">// all three flash from this page — <a href="#flash">pick one below ↓</a></div>
+    </div>
+  </section>
+
+  <section id="flash" style="border-top:1px solid #e2ddd0; background:#f2efe7;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[03] // flash_the_badge</div>
+      <h2 style="margin:0 0 14px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">Train your cat — flash projects here</h2>
+      <p style="margin:0 0 44px; max-width:64ch; font-size:16px;">Flashing happens in your browser over Web Serial — every image is a complete <code class="chip chip-band">.factory.bin</code> written at offset 0x0. Close any open serial monitors first (one client per port), plug the badge in, and let 'er rip.</p>
+      <div style="display:grid; grid-template-columns:1fr 1.1fr; gap:36px; align-items:start;" class="grid-2col">
+        <div style="display:grid; gap:18px;">
+          <label style="display:grid; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a;">select firmware
+            <select id="fw-select" style="background:#fff; color:#14181b; border:1px solid #d5cfc0; border-radius:9px; padding:12px 14px; font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600;"></select>
+          </label>
+          <div id="fw-desc" style="font-size:14px;">loading catalog…</div>
+          <div id="fw-note" style="display:none; font-size:13px; color:#8a5a00; border-left:3px solid #c77d00; padding-left:14px;"></div>
+          <div id="fw-builds" style="display:none; gap:8px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a;">select build</div>
+            <div id="fw-build-rows" style="display:grid; gap:8px;"></div>
+          </div>
+          <div id="fw-nobuild" style="display:none; font-size:14px; border:2px dashed #d5cfc0; border-radius:10px; padding:16px 18px; background:#fff;">No hosted image for this one — grab the .bin from the <a id="fw-page" href="#" target="_blank" rel="noopener">release page</a>, then use <strong style="color:#14181b;">FLASH LOCAL .BIN</strong> below.</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
+            <button id="btn-flash" class="btn-dark" style="border:none; font-size:14px; padding:15px 26px; border-radius:10px; cursor:pointer;">[ CONNECT &amp; FLASH ]</button>
+            <button id="btn-local" class="btn-outline" style="background:transparent; font-size:14px; padding:13px 22px; border-radius:10px; cursor:pointer;">[ FLASH LOCAL .BIN ]</button>
+            <input type="file" accept=".bin" id="fw-file" style="display:none;">
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#98a09a; line-height:1.7;">stuck? manual download mode: hold <span style="color:#14181b; font-weight:600;">BOOT</span>, tap <span style="color:#14181b; font-weight:600;">RESET</span>, release BOOT → retry.<br>badge "waiting for download" after? tap RESET once — this flasher exits via hard-reset.</div>
+        </div>
+        <div style="border-radius:14px; background:#0c1310; box-shadow:0 20px 50px -18px rgba(20,24,27,0.4); overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid #1c2a24; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#5a7a68;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#ff5566;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#ffb454;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#3dffa0;"></span>
+            <span style="margin-left:8px;">flash_log</span>
+            <span id="flash-progress" style="margin-left:auto; color:#3dffa0;"></span>
+          </div>
+          <div style="position:relative;">
+            <pre id="flash-log" style="margin:0; padding:16px 18px; height:340px; overflow:auto; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.65; color:#8fb8a3; white-space:pre-wrap; word-break:break-word;">// flasher idle — pick a build, plug the badge in, hit CONNECT
+// tip: close other serial monitors first. one client per port.</pre>
+            <div style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="serial" style="border-top:1px solid #e2ddd0;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[04] // serial_monitor</div>
+      <h2 style="margin:0 0 14px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">How to talk to your cat</h2>
+      <p style="margin:0 0 36px; max-width:64ch; font-size:16px;">Firmware in the repo uses the 115200 baud rate. Click connect, select your board, and you're ready!</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px;">
+        <select id="ser-baud" style="background:#fff; color:#14181b; border:1px solid #d5cfc0; border-radius:9px; padding:11px 14px; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;">
+          <option value="115200">115200 baud</option>
+          <option value="460800">460800 baud</option>
+          <option value="921600">921600 baud</option>
+          <option value="1000000">1000000 baud</option>
+        </select>
+        <button id="btn-ser" class="btn-dark" style="border:none; font-size:13px; padding:12px 22px; border-radius:9px; cursor:pointer;">[ CONNECT ]</button>
+        <button id="btn-ser-clear" class="btn-ghost" style="background:transparent; font-size:13px; padding:10px 20px; border-radius:9px; cursor:pointer;">[ CLEAR ]</button>
+      </div>
+      <div style="border-radius:14px; background:#0c1310; box-shadow:0 20px 50px -18px rgba(20,24,27,0.4); overflow:hidden;">
+        <div style="position:relative;">
+          <pre id="ser-log" style="margin:0; padding:16px 18px; height:300px; overflow:auto; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.65; color:#8fb8a3; white-space:pre-wrap; word-break:break-word;">// serial monitor idle — plug a badge in and hit CONNECT</pre>
+          <div style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);"></div>
+        </div>
+        <div style="display:flex; border-top:1px solid #1c2a24;">
+          <span style="padding:12px 0 12px 18px; color:#3dffa0; font-family:'IBM Plex Mono',monospace;">&gt;</span>
+          <input id="ser-in" placeholder="type a command, hit enter to send" style="flex:1; background:transparent; border:none; outline:none; color:#d7ffe9; font-family:'IBM Plex Mono',monospace; font-size:13px; padding:12px 12px;">
+          <button id="btn-ser-send" class="ser-send" style="background:transparent; border:none; border-left:1px solid #1c2a24; color:#3dffa0; padding:12px 20px; font-family:'IBM Plex Mono',monospace; font-size:13px; cursor:pointer;">[ SEND ]</button>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-top:26px; font-size:13.5px;" class="grid-3col">
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:12px; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; color:#00a35f; margin-bottom:8px; font-size:13px;">// meshtastic note</div>
+          USB carries the protobuf client API, not a text log — use the phone app or <code class="chip chip-sm">meshtastic --port PORT --info</code>. Human-readable logs live on the UART header (J4).
+        </div>
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:12px; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; color:#00a35f; margin-bottom:8px; font-size:13px;">// rnode status</div>
+          A flashed RNode answers <code class="chip chip-sm">rnodeconf --info PORT</code>. The TFT build shows frequency, airtime and channel load live on the badge screen.
+        </div>
+        <div style="background:#fff; border:1px solid #e2ddd0; border-radius:12px; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; color:#d6008f; margin-bottom:8px; font-size:13px;">// coming soon</div>
+          Browser visualizers fed by badge serial: mesh traffic maps, packet entropy art, spectrum plots. The paws that refreshes.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="firmware" style="border-top:1px solid #e2ddd0; background:#f2efe7;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[05] // firmware_catalog</div>
+      <h2 style="margin:0 0 14px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">More than nine lives</h2>
+      <p style="margin:0 0 40px; font-size:16px;">Every image is hardware-verified — hit <strong style="color:#14181b;">flash</strong> to load it into the flasher above.</p>
+      <div id="catalog" style="border-top:1px solid #d5cfc0;"></div>
+      <div style="font-size:14px; margin-top:24px;">Roll your own: both <a href="https://github.com/RetiaLLC/DefconBadge2026/tree/main/examples" target="_blank" rel="noopener">examples/</a> are PlatformIO projects with the badge board definition included — <code class="chip chip-band">hello-badge</code> is buttons + LED + buzzer in 100 lines. Copy one as a template.</div>
+    </div>
+  </section>
+
+  <section id="hardware" style="border-top:1px solid #e2ddd0;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#00a35f; margin-bottom:10px;">[06] // hardware_and_pinout</div>
+      <h2 style="margin:0 0 44px; font-size:44px; color:#14181b; font-weight:800; letter-spacing:-1.5px;">Tech specs</h2>
+      <div style="display:grid; grid-template-columns:0.8fr 1.5fr; gap:40px; align-items:center; margin-bottom:48px;" class="grid-2col">
+        <div style="display:grid; gap:11px; font-size:13.5px;">
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">MCU</span><span><strong style="color:#14181b;">ESP32-S3-WROOM-1</strong> — dual-core 240 MHz · WiFi + BLE · 8 MB flash · 2 MB PSRAM · native USB-C</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">DISPLAY</span><span><strong style="color:#14181b;">2.4″ color TFT + touch</strong> — ILI9341 240×320 · XPT2046 resistive · 40 MHz SPI</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">RADIO</span><span><strong style="color:#14181b;">RFM95W LoRa 915 MHz</strong> — SX1276 · U.FL antenna · SX127x drivers only</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">INPUT</span><span><strong style="color:#14181b;">7 buttons + touch</strong> — d-pad + A/B, BOOT as a 7th · all active-low</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">BLINKIES</span><span><strong style="color:#14181b;">10× WS2812B NeoPixels</strong> (two ears of 5) + green debug LED</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">SOUND</span><span><strong style="color:#14181b;">Piezo buzzer</strong> — MOSFET-driven, loudest ≈4 kHz</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">STORAGE</span><span><strong style="color:#14181b;">micro-SD slot</strong> — FAT, tested to 16 GB SDHC</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">EXPANSION</span><span><strong style="color:#14181b;">SAO v2 · QWIIC · UART · SPI</strong> · off-board NeoPixel out</span></div>
+          <div style="display:grid; grid-template-columns:100px 1fr; gap:14px;"><span class="spec-k">POWER</span><span><strong style="color:#14181b;">2×AA (boost) or USB-C</strong> — auto-switching, no battery voltage sense</span></div>
+        </div>
+        <div>
+          <model-viewer src="assets/badge.glb" alt="ScriptKitty DEF CON badge — interactive 3D model" camera-controls auto-rotate auto-rotate-delay="2500" interaction-prompt="none" shadow-intensity="0.7" exposure="1.05" min-field-of-view="10deg" max-field-of-view="45deg" loading="lazy" reveal="auto" style="width:100%; height:620px; background:transparent;"></model-viewer>
+          <div style="margin-top:4px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#98a09a; text-align:center;">$ the actual 3D model — orbit, zoom, flip. files below ↓</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.1fr 1fr; gap:36px; align-items:start;" class="grid-2col">
+        <div style="border-radius:14px; background:#0c1310; overflow:hidden; box-shadow:0 20px 50px -18px rgba(20,24,27,0.4);">
+          <div style="display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid #1c2a24; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#5a7a68;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#ff5566;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#ffb454;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#3dffa0;"></span>
+            <span style="margin-left:8px;">$ cat pinout.map — the ones you'll reach for</span>
+          </div>
+          <pre style="margin:0; padding:18px 20px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.75; color:#8fb8a3; overflow:auto;">buttons   LEFT 3 · UP 4 · DOWN 5 · RIGHT 6 · B 7 · A 8
+          BOOT 0 (usable after boot) — all active-low
+led       green debug LED ── GPIO 2
+neopixel  on-board ×10 ──── GPIO 17   off-board ─ GPIO 0
+buzzer    piezo ─────────── GPIO 9
+spi bus   SCK 13 · MOSI 11 · MISO 12  (shared ×5!)
+chip sel  TFT 47 · LoRa 48 · SD 10 · touch 14 · aux 37
+i2c       SDA 35 · SCL 36  (SAO + QWIIC)
+lora      DIO0/IRQ 21 · RESET 38  (SX127x only)
+uart      TX 43 · RX 44  (J4 header)</pre>
+        </div>
+        <div>
+          <div style="background:#fff; border:1px solid #e2ddd0; border-radius:12px; padding:20px 24px; margin-bottom:18px;">
+            <div style="font-family:'IBM Plex Mono',monospace; color:#c77d00; font-size:13px; font-weight:600; margin-bottom:8px;">!! rule of the shared bus</div>
+            <div style="font-size:14px;">One SPI bus serves five peripherals. Park every other chip-select high before touching any device — a floating LoRa CS corrupts everything.</div>
+          </div>
+          <div style="font-size:14px; line-height:1.9;">Full GPIO map + all 8 hardware quirks:<br>
+          → <a href="https://github.com/RetiaLLC/DefconBadge2026/blob/main/docs/pinout.md" target="_blank" rel="noopener">docs/pinout.md</a><br>
+          → <a href="https://github.com/RetiaLLC/DefconBadge2026/blob/main/docs/hardware.md" target="_blank" rel="noopener">docs/hardware.md</a><br>
+          → KiCad 8 sources in <a href="https://github.com/RetiaLLC/DefconBadge2026/tree/main/hardware" target="_blank" rel="noopener">hardware/</a></div>
+        </div>
+      </div>
+      <div id="case" style="margin-top:56px;">
+        <h3 style="margin:0 0 10px; font-size:28px; color:#14181b; font-weight:800; letter-spacing:-0.8px;">Build a case</h3>
+        <p style="margin:0 0 22px; max-width:64ch; font-size:15px;">The full case-design kit, straight from the KiCad sources. The board is <strong style="color:#14181b;">142.4 × 81.0 mm</strong> with a <strong style="color:#14181b;">25.5 mm</strong> total assembly height (display glass to battery holder). Give your cat a house.</p>
+        <div style="border-top:1px solid #e2ddd0;">
+          <div style="display:grid; grid-template-columns:280px 1fr 140px; gap:24px; padding:16px 4px; border-bottom:1px solid #e2ddd0; align-items:baseline;" class="grid-dl">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:#14181b;">full_assembly.step</span>
+            <span style="font-size:13.5px;">Board + every component as CAD B-rep — the primary reference for Fusion 360, FreeCAD, or SolidWorks</span>
+            <a href="case/full_assembly.step" download="full_assembly.step" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; justify-self:end;">[download]</a>
+          </div>
+          <div style="display:grid; grid-template-columns:280px 1fr 140px; gap:24px; padding:16px 4px; border-bottom:1px solid #e2ddd0; align-items:baseline;" class="grid-dl">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:#14181b;">board_only.step</span>
+            <span style="font-size:13.5px;">Bare board solid (outline + holes) — for boolean cavity work</span>
+            <a href="case/board_only_no_components.step" download="board_only_no_components.step" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; justify-self:end;">[download]</a>
+          </div>
+          <div style="display:grid; grid-template-columns:280px 1fr 140px; gap:24px; padding:16px 4px; border-bottom:1px solid #e2ddd0; align-items:baseline;" class="grid-dl">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:#14181b;">full_assembly.stl</span>
+            <span style="font-size:13.5px;">Same assembly as a mesh (mm, Z-up) — OpenSCAD and slicer sanity checks</span>
+            <a href="case/full_assembly.stl" download="full_assembly.stl" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; justify-self:end;">[download]</a>
+          </div>
+          <div style="display:grid; grid-template-columns:280px 1fr 140px; gap:24px; padding:16px 4px; border-bottom:1px solid #e2ddd0; align-items:baseline;" class="grid-dl">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:#14181b;">full_assembly.glb</span>
+            <span style="font-size:13.5px;">The model in the hero above — quick viewing in Blender, three.js, or macOS Quick Look</span>
+            <a href="assets/badge.glb" download="full_assembly.glb" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; justify-self:end;">[download]</a>
+          </div>
+          <div style="display:grid; grid-template-columns:280px 1fr 140px; gap:24px; padding:16px 4px; border-bottom:1px solid #e2ddd0; align-items:baseline;" class="grid-dl">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:#14181b;">badge-outline.svg / .dxf</span>
+            <span style="font-size:13.5px;">Edge.Cuts outline (mm) — laser cutters, Inkscape, or 2D sketch import into any CAD package</span>
+            <span style="display:flex; gap:12px; justify-self:end;"><a href="case/badge-outline.svg" download="board_outline.svg" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;">[svg]</a><a href="case/badge-outline.dxf" download="board_outline.dxf" style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;">[dxf]</a></span>
+          </div>
+        </div>
+        <div style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#98a09a;">// scripting a case? also: <a href="case/holes.csv" download="holes.csv">holes.csv</a> · <a href="case/component_positions.csv" download="component_positions.csv">component_positions.csv</a> · <a href="case/component_bboxes_step_frame.json" download="component_bboxes_step_frame.json">component bboxes</a> · <a href="case/README.md" download="README.md">the kit README</a> (coordinate frames, cutout positions, gotchas)</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="links" style="border-top:1px solid #e2ddd0; background:#14181b;">
+    <div style="max-width:1140px; margin:0 auto; padding:80px 36px 48px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#3dffa0; margin-bottom:10px;">[07] // community_and_links</div>
+      <h2 style="margin:0 0 36px; font-size:44px; color:#faf9f5; font-weight:800; letter-spacing:-1.5px;">Join the litter</h2>
+      <div style="display:grid; gap:14px; font-size:15px; color:#9aa5a0;">
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://github.com/RetiaLLC/DefconBadge2026" target="_blank" rel="noopener" class="link-lit">github.com/RetiaLLC/DefconBadge2026</a> — this badge's home: docs, firmware, examples, KiCad sources</div>
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://scriptkitty.sh" target="_blank" rel="noopener" class="link-lit">scriptkitty.sh</a> — Retia's browser flasher for the whole hardware family</div>
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://github.com/RetiaLLC/badge-launcher" target="_blank" rel="noopener" class="link-lit">badge-launcher</a> — the flagship multi-boot experience + MESH-101 guide</div>
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://github.com/RetiaLLC/Anemoia-DefconBadge" target="_blank" rel="noopener" class="link-lit">Anemoia-DefconBadge</a> — NES emulator + curated homebrew game list</div>
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://github.com/RetiaLLC/DefconBadge2026/releases" target="_blank" rel="noopener" class="link-lit">releases</a> — every ready-to-flash image, versioned</div>
+        <div><span style="color:#ff4fd8; font-family:'IBM Plex Mono',monospace;">-&gt;</span> <a href="https://discord.gg/cJHNswdSTz" target="_blank" rel="noopener" class="link-lit">Retia Discord server</a> — come hang with the litter</div>
+      </div>
+      <footer style="margin-top:64px; padding-top:24px; border-top:1px solid #2a322d; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5a655f; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <span># the ScriptKitty DEF CON Badge — <a href="https://retia.io" target="_blank" rel="noopener" class="link-static">Retia LLC</a> × <a href="https://www.iotvillage.org" target="_blank" rel="noopener" class="link-static">IoT Village</a><br># made in the USA by real catboys and catgirls, with ♥ and whiskers</span>
+        <span>$ echo "stay curious, stay pawsitive" &amp;&amp; exit 0</span>
+      </footer>
+    </div>
+  </section>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
