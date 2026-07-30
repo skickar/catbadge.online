@@ -138,11 +138,57 @@
     });
   }
 
+  // --- authorization gate (transmit/attack-capable firmware) -----------------
+  // Honest label + an "I own / am authorized" affirmation before flashing any
+  // gate:true build (Wi-Fi deauth, BLE spoof, RF jam, LoRa TX). Resolves true only
+  // on explicit confirmation.
+  function showAuthGate(s) {
+    return new Promise(function (resolve) {
+      var ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,14,0.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      var box = document.createElement('div');
+      box.style.cssText = "max-width:520px;width:100%;background:#fbf9f3;border:2px solid #00a35f;border-radius:14px;padding:22px 24px;font-family:'IBM Plex Mono',monospace;color:#14181b;box-shadow:0 20px 60px rgba(0,0,0,0.45);";
+      var h = document.createElement('div');
+      h.style.cssText = 'font-weight:800;font-size:18px;margin-bottom:10px;';
+      h.textContent = '⚠ Authorization required';
+      var sub = document.createElement('div');
+      sub.style.cssText = 'font-size:13.5px;line-height:1.5;margin-bottom:10px;color:#333;';
+      sub.textContent = s.name + ' is a transmit- and attack-capable tool. Flashing it lets the badge:';
+      var ul = document.createElement('ul');
+      ul.style.cssText = 'margin:0 0 12px 18px;font-size:13px;color:#8a1f1f;';
+      (s.capabilities || []).forEach(function (c) { var li = document.createElement('li'); li.textContent = c; li.style.marginBottom = '3px'; ul.appendChild(li); });
+      var warn = document.createElement('div');
+      warn.style.cssText = 'font-size:13px;line-height:1.5;margin-bottom:16px;';
+      warn.textContent = 'Only continue if you OWN or are explicitly AUTHORIZED to test the hardware, networks, and RF you will point it at. Transmitting against systems you do not own may be illegal.';
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;';
+      var cancel = document.createElement('button');
+      cancel.textContent = 'Cancel';
+      cancel.style.cssText = 'padding:9px 14px;border:1px solid #98a09a;background:#fff;border-radius:8px;font-family:inherit;font-weight:600;cursor:pointer;';
+      var ok = document.createElement('button');
+      ok.textContent = 'I own / am authorized — continue';
+      ok.style.cssText = 'padding:9px 14px;border:1px solid #00a35f;background:#00a35f;color:#fff;border-radius:8px;font-family:inherit;font-weight:700;cursor:pointer;';
+      function close(v) { try { document.body.removeChild(ov); } catch (_) {} resolve(v); }
+      cancel.addEventListener('click', function () { close(false); });
+      ok.addEventListener('click', function () { close(true); });
+      ov.addEventListener('click', function (e) { if (e.target === ov) close(false); });
+      btns.appendChild(cancel); btns.appendChild(ok);
+      box.appendChild(h); box.appendChild(sub); box.appendChild(ul); box.appendChild(warn); box.appendChild(btns);
+      ov.appendChild(box); document.body.appendChild(ov);
+    });
+  }
+
   // --- flasher (esptool-js 0.4.1) --------------------------------------------
   async function doFlash() {
     var b = curBuild();
     if (!b) { flog('!! no hosted build selected — use FLASH LOCAL .BIN with a downloaded image'); return; }
     if (flashing) return;
+    var gs = sel();
+    if (gs && gs.gate) {
+      var authed = await showAuthGate(gs);
+      if (!authed) { flog('!! flash cancelled — authorization not confirmed'); return; }
+      flog('   authorization confirmed by user — proceeding');
+    }
     if (!navigator.serial) { flog('!! Web Serial not available — use Chrome, Edge or recent Firefox over HTTPS'); return; }
     setFlashing(true); setProgress(-1);
     try {

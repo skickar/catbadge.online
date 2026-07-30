@@ -129,15 +129,19 @@
     {
       "id": "bitpirate",
       "logo": "assets/logo-bitpirate.png",
-      "name": "ESP32 Bit Pirate",
-      "ver": "Bus Pirate-style",
-      "desc": "A Bus Pirate-inspired multi-protocol workbench — one CLI (USB serial, Wi-Fi web UI, or browser Web Serial) that speaks I2C, SPI, UART, JTAG/SWD, CAN, 1-Wire, infrared, Sub-GHz and more. Scan, sniff, dump, flash, and automate it from Python. Every bus needs a driver.",
-      "buildsLine": "flash the s3 dev-kit build from the Bit Pirate web flasher · mind the badge pin map",
-      "docs": "https://github.com/geo-tp/ESP32-Bit-Pirate/wiki",
-      "src": "https://github.com/geo-tp/ESP32-Bit-Pirate",
-      "page": "https://geo-tp.github.io/ESP32-Bit-Pirate/webflasher/",
-      "note": "Any 8 MB ESP32-S3 runs it — the badge qualifies. Default pins target the dev-kit, so check the badge pinout before wiring targets.",
-      "builds": []
+      "name": "ESP32 Bus Pirate",
+      "ver": "badge-v1.0",
+      "desc": "A Bus Pirate-style multi-protocol workbench, native on the badge TFT: one CLI (USB serial, Wi-Fi web UI, or browser Web Serial) that speaks I2C/SPI/UART/1-Wire/JTAG and more — with on-screen bus scan + live register monitor, a BME280 environment dashboard that colours the ears by temperature, Wi-Fi/BLE scanners, and on-board LoRa TX/RX (verified badge-to-badge).",
+      "buildsLine": "1 badge-native build · transmit-capable · authorized use only",
+      "docs": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.0",
+      "src": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/tree/retia-badge-port",
+      "page": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.0",
+      "note": "⚠ Transmit- & attack-capable: Wi-Fi deauth/sniff, BLE spoof/sniff, LoRa & RF transmit, bus/RF jam. Use ONLY on hardware, networks & RF you own or are authorized to test. Never TX on LoRa without a 915 MHz antenna. I2C targets go on the SAO header (J5), not Qwiic.",
+      "gate": true,
+      "capabilities": ["Wi-Fi deauth / sniff / nmap", "Bluetooth LE spoof / sniff", "LoRa & Sub-GHz transmit", "bus & RF jamming"],
+      "builds": [
+        { "file": "buspirate-badge.factory.bin", "label": "full multitool — buses + Wi-Fi/BLE/LoRa, on-screen scan & BME dash", "url": "firmware/buspirate-badge.factory.bin", "addr": 0 }
+      ]
     }
   ]
 }
