@@ -109,8 +109,8 @@
       "ver": "WLED fork",
       "desc": "A WLED fork designed to run on the badge — drive the ten NeoPixel ears (and anything on the NeoPixel-out header) from the WLED web UI or phone app. Boots into a pride rainbow; A/B + d-pad switch effects on the go, with live status on the TFT.",
       "buildsLine": "flash at scriptkitty.sh · runs as a launcher SD guest too",
-      "docs": "https://github.com/RetiaLLC/WLED",
-      "src": "https://github.com/RetiaLLC/WLED",
+      "docs": "https://github.com/RetiaLLC/WLEDkitty",
+      "src": "https://github.com/RetiaLLC/WLEDkitty",
       "page": "https://scriptkitty.sh",
       "builds": []
     },
