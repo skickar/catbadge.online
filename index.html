@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ScriptKitty DEF CON Badge — getting started</title>
 <meta name="description" content="The badge with nine lives. Getting started, in-browser flashing, serial monitor, firmware catalog, hardware specs and case-design kit for the ScriptKitty DEF CON Badge by Retia LLC × IoT Village.">
@@ -10,14 +11,10 @@
 <meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
 <meta property="og:url" content="https://www.catbadge.online/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="vendor/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/fonts.css">
 <link rel="stylesheet" href="styles.css">
-<script type="module">
-import { ESPLoader, Transport } from "./vendor/esptool-bundle.js";
-window.esptooljs = { ESPLoader, Transport };
-</script>
+<script type="module" src="vendor/esptool-init.js"></script>
 <script type="module" src="vendor/model-viewer.min.js"></script>
 </head>
 <body>

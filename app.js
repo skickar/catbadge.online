@@ -20,6 +20,16 @@
   function sel() { for (var i = 0; i < fw.length; i++) if (fw[i].id === selId) return fw[i]; return null; }
   function curBuild() { var s = sel(); return (s && s.builds[selBuild]) || null; }
 
+  // Integrity: SHA-256 of the fetched image, hex. Lets the flasher refuse a bin whose
+  // bytes don't match the hash pinned in manifest.json — so a swapped/corrupted image
+  // can't be written to hardware even if it was served from this origin.
+  async function sha256hex(buf) {
+    var dig = await crypto.subtle.digest('SHA-256', buf);
+    var b = new Uint8Array(dig), h = '';
+    for (var i = 0; i < b.length; i++) h += b[i].toString(16).padStart(2, '0');
+    return h;
+  }
+
   // --- terminals -------------------------------------------------------------
   function flog(l) {
     flashLogText = (flashLogText + '\n' + l).split('\n').slice(-300).join('\n');
@@ -223,6 +233,14 @@
       var resp = await fetch(b.url);
       if (!resp.ok) throw new Error('HTTP ' + resp.status + ' fetching image');
       var buf = new Uint8Array(await resp.arrayBuffer());
+      if (b.sha256) {
+        flog('$ verify sha256 ' + b.file);
+        var got = await sha256hex(buf);
+        if (got !== b.sha256.toLowerCase()) {
+          throw new Error('integrity check FAILED — refusing to flash. expected ' + b.sha256.slice(0, 16) + '…, got ' + got.slice(0, 16) + '…');
+        }
+        flog('   ok — ' + got.slice(0, 16) + '… matches manifest');
+      }
       await flashBytes(buf, b.file, b.addr || 0);
     } catch (e) {
       flog('!! ' + e.message);

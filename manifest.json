@@ -24,8 +24,20 @@
       "docs": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/doom",
       "src": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/doom",
       "builds": [
-        { "file": "doom-audio.factory.bin", "label": "SFX through the piezo — gloriously PC-speaker", "url": "firmware/doom-audio.factory.bin", "addr": 0 },
-        { "file": "doom-silent.factory.bin", "label": "mute — same game otherwise", "url": "firmware/doom-silent.factory.bin", "addr": 0 }
+        {
+          "file": "doom-audio.factory.bin",
+          "label": "SFX through the piezo — gloriously PC-speaker",
+          "url": "firmware/doom-audio.factory.bin",
+          "addr": 0,
+          "sha256": "0a84d246044c24d866ece79271797666fd573c09f7395b31b03726057826e05d"
+        },
+        {
+          "file": "doom-silent.factory.bin",
+          "label": "mute — same game otherwise",
+          "url": "firmware/doom-silent.factory.bin",
+          "addr": 0,
+          "sha256": "f605b313fa495d872610a719c8a7aa69801de2dfd86f976ea7f63c50e1890802"
+        }
       ]
     },
     {
@@ -52,9 +64,27 @@
       "src": "https://github.com/RetiaLLC/DefconBadge2026/tree/main/firmware/meshtastic",
       "note": "ANTENNA FIRST. Never TX on LoRa without a 915 MHz antenna attached.",
       "builds": [
-        { "file": "meshtastic-2.7.23-standard.factory.bin", "label": "stock behavior, classic button-driven TFT UI", "url": "firmware/meshtastic-2.7.23-standard.factory.bin", "addr": 0 },
-        { "file": "meshtastic-2.7.23-lowpower.factory.bin", "label": "daily driver — idle draw cut ~39%, B = back", "url": "firmware/meshtastic-2.7.23-lowpower.factory.bin", "addr": 0 },
-        { "file": "meshtastic-2.7.23-mui-touch.factory.bin", "label": "color touch UI, on-screen keyboard (BLE off, phone via WiFi/TCP)", "url": "firmware/meshtastic-2.7.23-mui-touch.factory.bin", "addr": 0 }
+        {
+          "file": "meshtastic-2.7.23-standard.factory.bin",
+          "label": "stock behavior, classic button-driven TFT UI",
+          "url": "firmware/meshtastic-2.7.23-standard.factory.bin",
+          "addr": 0,
+          "sha256": "334d151eb1a8c50b293546200d34a7940d942ac458eda6ddbdd324ac32461237"
+        },
+        {
+          "file": "meshtastic-2.7.23-lowpower.factory.bin",
+          "label": "daily driver — idle draw cut ~39%, B = back",
+          "url": "firmware/meshtastic-2.7.23-lowpower.factory.bin",
+          "addr": 0,
+          "sha256": "e6ba517ece92f18686784a8a74d48bcc6246bc425e180258cee545826215657c"
+        },
+        {
+          "file": "meshtastic-2.7.23-mui-touch.factory.bin",
+          "label": "color touch UI, on-screen keyboard (BLE off, phone via WiFi/TCP)",
+          "url": "firmware/meshtastic-2.7.23-mui-touch.factory.bin",
+          "addr": 0,
+          "sha256": "7a9ec6769b7fa94574a272b849b576f867ab6678c3b79e10d8db6db14b3ad7ef"
+        }
       ]
     },
     {
@@ -68,9 +98,27 @@
       "src": "https://github.com/RetiaLLC/MeshCore/tree/retia-badge",
       "note": "Factory images, not launcher SD guests — flash over USB. Hold UP at reset to return to the launcher.",
       "builds": [
-        { "file": "meshcore-touch-messenger.factory.bin", "label": "the one to use — full touchscreen mesh communicator", "url": "firmware/meshcore-touch-messenger.factory.bin", "addr": 0 },
-        { "file": "meshcore-companion-ble.factory.bin", "label": "radio for the MeshCore phone app (BLE)", "url": "firmware/meshcore-companion-ble.factory.bin", "addr": 0 },
-        { "file": "meshcore-companion-usb.factory.bin", "label": "companion over USB serial for meshcore-cli / web client", "url": "firmware/meshcore-companion-usb.factory.bin", "addr": 0 }
+        {
+          "file": "meshcore-touch-messenger.factory.bin",
+          "label": "the one to use — full touchscreen mesh communicator",
+          "url": "firmware/meshcore-touch-messenger.factory.bin",
+          "addr": 0,
+          "sha256": "00982545e5dda4db198dfe4d7f21af2eca1dadb487278dcf407c415af373e83c"
+        },
+        {
+          "file": "meshcore-companion-ble.factory.bin",
+          "label": "radio for the MeshCore phone app (BLE)",
+          "url": "firmware/meshcore-companion-ble.factory.bin",
+          "addr": 0,
+          "sha256": "691405a6157cd4561873c8d2887c72c2e6fbdcea0567b7d36c3af1603574a0d0"
+        },
+        {
+          "file": "meshcore-companion-usb.factory.bin",
+          "label": "companion over USB serial for meshcore-cli / web client",
+          "url": "firmware/meshcore-companion-usb.factory.bin",
+          "addr": 0,
+          "sha256": "48424db06e2b707500c31963c259c49647632ee8d1d7975973203e30d3228af9"
+        }
       ]
     },
     {
@@ -84,8 +132,20 @@
       "src": "https://github.com/RetiaLLC/NibbleReticulum",
       "note": "After flashing: rnodeconf <PORT> -r --platform 80 --product f0 --model fe --hwrev 1",
       "builds": [
-        { "file": "rnode-1.85-tft.factory.bin", "label": "recommended — live RNode status screen on the TFT", "url": "firmware/rnode-1.85-tft.factory.bin", "addr": 0 },
-        { "file": "rnode-1.85.factory.bin", "label": "same firmware, headless (display dark)", "url": "firmware/rnode-1.85.factory.bin", "addr": 0 }
+        {
+          "file": "rnode-1.85-tft.factory.bin",
+          "label": "recommended — live RNode status screen on the TFT",
+          "url": "firmware/rnode-1.85-tft.factory.bin",
+          "addr": 0,
+          "sha256": "f726b9590a62e0c3f8efd572c7a5592f1cbde96e7c1d7d9396595e3760333e87"
+        },
+        {
+          "file": "rnode-1.85.factory.bin",
+          "label": "same firmware, headless (display dark)",
+          "url": "firmware/rnode-1.85.factory.bin",
+          "addr": 0,
+          "sha256": "8f7a90a48e88ca20363c53d0f54ea324a5e96bad3902f0e0a0a9c987510f4b53"
+        }
       ]
     },
     {
@@ -138,9 +198,20 @@
       "page": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.0",
       "note": "⚠ Transmit- & attack-capable: Wi-Fi deauth/sniff, BLE spoof/sniff, LoRa & RF transmit, bus/RF jam. Use ONLY on hardware, networks & RF you own or are authorized to test. Never TX on LoRa without a 915 MHz antenna. I2C targets go on the SAO header (J5), not Qwiic.",
       "gate": true,
-      "capabilities": ["Wi-Fi deauth / sniff / nmap", "Bluetooth LE spoof / sniff", "LoRa & Sub-GHz transmit", "bus & RF jamming"],
+      "capabilities": [
+        "Wi-Fi deauth / sniff / nmap",
+        "Bluetooth LE spoof / sniff",
+        "LoRa & Sub-GHz transmit",
+        "bus & RF jamming"
+      ],
       "builds": [
-        { "file": "buspirate-badge.factory.bin", "label": "full multitool — buses + Wi-Fi/BLE/LoRa, on-screen scan & BME dash", "url": "firmware/buspirate-badge.factory.bin", "addr": 0 }
+        {
+          "file": "buspirate-badge.factory.bin",
+          "label": "full multitool — buses + Wi-Fi/BLE/LoRa, on-screen scan & BME dash",
+          "url": "firmware/buspirate-badge.factory.bin",
+          "addr": 0,
+          "sha256": "9d86bb7b9229dd5b36ede335f711a9949c9cc4ccefdd1b8f25daaa4c6bff75d2"
+        }
       ]
     }
   ]
