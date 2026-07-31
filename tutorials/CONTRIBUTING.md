@@ -1,7 +1,8 @@
 # Adding a tutorial
 
-The Tutorials section is **manifest-driven** — the same pattern as the firmware catalog. You add
-a guide by dropping one HTML file and adding one JSON entry. No build step, no framework.
+The Tutorials section works like the firmware catalog: a JSON file lists the guides and the index
+builds itself from it. You add a guide by dropping in one HTML file and adding one JSON entry.
+There's no build step.
 
 ## The three-step recipe
 
@@ -26,8 +27,8 @@ a guide by dropping one HTML file and adding one JSON entry. No build step, no f
    ```
    The index sorts newest-first by `updated` (use `YYYY-MM-DD`).
 
-3. **Push.** Commit `<slug>.html` + the `tutorials.json` change to `main`. The index renders the
-   new card automatically; nothing else to wire.
+3. **Push.** Commit `<slug>.html` and the `tutorials.json` change to `main`. The index picks up the
+   new card on the next load.
 
 ## Tags — how guides connect to the rest of the site
 

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to add a guide — ScriptKitty Badge Tutorials</title>
+<meta name="description" content="How to add, tag, and link a new tutorial on the ScriptKitty badge site — one HTML file plus one JSON entry.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="../vendor/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="tutorial.css">
+<style>
+/* scoped styling for this how-to page only */
+.steps3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:26px 0 8px; }
+.stepcard { background:#fff; border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+.stepcard .n { font-family:'IBM Plex Mono',monospace; font-size:30px; font-weight:600; color:var(--green); line-height:1; }
+.stepcard h3 { margin:10px 0 6px; font-size:18px; }
+.stepcard p { margin:0; font-size:14px; }
+.stepcard code { font-size:0.85em; background:var(--chip); padding:1px 5px; border-radius:5px; }
+
+/* annotated field list */
+.fields { display:grid; gap:8px; margin:16px 0; }
+.field { display:grid; grid-template-columns:150px 1fr; gap:14px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--border); }
+.field .k { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink); font-weight:600; }
+.field .k .req { color:var(--magenta); }
+.field .d { font-size:14px; }
+
+/* tag-link diagram */
+.linkmap { border:1px solid var(--border); border-radius:14px; background:var(--band); padding:22px; margin:20px 0; overflow-x:auto; }
+.lm-row { display:flex; align-items:center; gap:10px; flex-wrap:nowrap; justify-content:center; min-width:min-content; }
+.lm-box { background:#fff; border:1px solid var(--border-band); border-radius:10px; padding:11px 13px; font-size:12.5px; flex:0 0 auto; width:170px; }
+.lm-box .cap { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); display:block; margin-bottom:4px; }
+.lm-box b { color:var(--ink); }
+.lm-pill { display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:600; color:#fff; background:var(--magenta); padding:2px 9px; border-radius:999px; }
+.lm-arrow { font-family:'IBM Plex Mono',monospace; color:var(--green); font-weight:600; font-size:13px; white-space:nowrap; text-align:center; }
+.lm-arrow small { display:block; color:var(--muted); font-weight:400; font-size:11px; }
+.palette { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+.sw { font-family:'IBM Plex Mono',monospace; font-size:12px; color:#fff; padding:4px 10px; border-radius:999px; }
+@media (max-width:720px){ .steps3{grid-template-columns:1fr;} .field{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav class="t-nav">
+  <a href="../" class="wordmark" style="color:inherit;">=^..^= <span class="kw">SCRIPTKITTY</span>//BADGE</a>
+  <span class="spacer"></span>
+  <a href="../#flash" class="navlink">Flash</a>
+  <a href="../#firmware" class="navlink">Firmware</a>
+  <a href="./" class="navlink" style="color:#00a35f;">Tutorials</a>
+  <a href="../#flash" class="pill">[ flash ]</a>
+</nav>
+
+<div class="wrap-narrow">
+  <header class="guide-hero">
+    <div class="crumbs"><a href="./">Tutorials</a> / how to add a guide</div>
+    <h1 class="guide-h1">Add a guide in 3 steps</h1>
+    <p class="guide-sub">The Tutorials section works like the firmware catalog: a JSON file lists the guides and the page builds itself from it. A new guide is <strong>one HTML file plus one JSON entry</strong>, with no build step. This page walks through the workflow and shows how a tag links a guide to the rest of the site.</p>
+  </header>
+
+  <article class="guide">
+
+    <div class="steps3">
+      <div class="stepcard">
+        <div class="n">01</div>
+        <h3>Copy the template</h3>
+        <p><code>cp _template.html my-slug.html</code> and write it. All styling is already wired — use the <code>callout</code>, <code>figure.shot</code>, and <code>ptable</code> blocks shown in the template.</p>
+      </div>
+      <div class="stepcard">
+        <div class="n">02</div>
+        <h3>Add one JSON entry</h3>
+        <p>Drop a single object into <code>tutorials.json</code> under <code>tutorials</code> (annotated below). This is what makes the card appear on the index.</p>
+      </div>
+      <div class="stepcard">
+        <div class="n">03</div>
+        <h3>Commit &amp; push</h3>
+        <p>Push <code>my-slug.html</code> and the <code>tutorials.json</code> change to <code>main</code>. The index picks up the new card on the next load.</p>
+      </div>
+    </div>
+
+    <div class="callout tip"><span class="h">// how it fits together</span> The index page reads <code>tutorials.json</code> at load and builds the cards and filter chips from it. Your guide HTML is a page it links to. The JSON entry is what registers a guide; the HTML holds the content.</div>
+
+    <h2>Step 2, up close: the JSON entry</h2>
+    <p>Add this object to the <code>tutorials</code> array in <a href="tutorials.json">tutorials.json</a>. Newest-first ordering is automatic (by <code>updated</code>).</p>
+    <pre><code>{
+  <span class="g">"id"</span>: "wled-ear-effects",
+  <span class="g">"title"</span>: "Drive the ear NeoPixels with WLEDkitty",
+  <span class="g">"summary"</span>: "One-to-two sentence teaser shown on the index card.",
+  <span class="g">"tags"</span>: ["badge", "wledkitty"],
+  <span class="g">"difficulty"</span>: "beginner",
+  <span class="g">"minutes"</span>: 10,
+  <span class="g">"updated"</span>: "2026-08-02",
+  <span class="g">"author"</span>: "Retia",
+  <span class="g">"url"</span>: "wled-ear-effects.html"
+}</code></pre>
+
+    <div class="fields">
+      <div class="field"><span class="k">id <span class="req">*</span></span><span class="d">Unique slug. Convention: match your filename (minus <code>.html</code>).</span></div>
+      <div class="field"><span class="k">title <span class="req">*</span></span><span class="d">Shown as the card heading and the browser tab.</span></div>
+      <div class="field"><span class="k">summary <span class="req">*</span></span><span class="d">The teaser under the title on the index card. One or two sentences.</span></div>
+      <div class="field"><span class="k">tags <span class="req">*</span></span><span class="d">Array of tag ids that <strong>must exist</strong> in the tag registry (next section). These drive filtering <em>and</em> the cross-link to firmware.</span></div>
+      <div class="field"><span class="k">difficulty</span><span class="d">Free text — e.g. <code>beginner</code>, <code>intermediate</code>. Shown in the card's right column.</span></div>
+      <div class="field"><span class="k">minutes</span><span class="d">Rough read/do time, shown as <code>~N min</code>.</span></div>
+      <div class="field"><span class="k">updated <span class="req">*</span></span><span class="d"><code>YYYY-MM-DD</code>. Sorts the list — newest first.</span></div>
+      <div class="field"><span class="k">url <span class="req">*</span></span><span class="d">The guide's HTML filename, relative to <code>tutorials/</code>.</span></div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);"><span class="mono"><span style="color:var(--magenta)">*</span></span> required · the rest are optional but nice.</p>
+
+    <h2>How tags link everything</h2>
+    <p>Tags are the glue. Every tag you use must be declared once in the <code>tags</code> registry at the top of <code>tutorials.json</code>. A tag entry looks like this:</p>
+    <pre><code>"bus-pirate": {
+  <span class="g">"label"</span>: "Bus Pirate",     <span class="c">// text on the chip/pill</span>
+  <span class="g">"kind"</span>:  "project",       <span class="c">// hardware | project | topic (labeling only)</span>
+  <span class="g">"color"</span>: "#d6008f",       <span class="c">// pill color (see palette below)</span>
+  <span class="g">"firmware"</span>: "bitpirate",  <span class="c">// ← the cross-link: a firmware id, or null</span>
+  <span class="g">"section"</span>: null           <span class="c">// optional URL for a page section, or null</span>
+}</code></pre>
+
+    <p>The <code>firmware</code> field is the important one. When a tag names a firmware <code>id</code> from the site's root <a href="../manifest.json">manifest.json</a>, the link becomes <strong>bidirectional automatically</strong>:</p>
+
+    <div class="linkmap">
+      <div class="lm-row">
+        <div class="lm-box">
+          <span class="cap">your guide</span>
+          <b>Hack LoRa &amp; read I2C…</b><br>
+          <span style="font-size:12px;color:var(--muted)">tagged</span> <span class="lm-pill">Bus Pirate</span>
+        </div>
+        <div class="lm-arrow">──▶<small>tag "bus-pirate"</small></div>
+        <div class="lm-box">
+          <span class="cap">tag registry</span>
+          <b>bus-pirate</b><br>
+          <span style="font-size:12px">firmware: <code style="font-size:11px">"bitpirate"</code></span>
+        </div>
+        <div class="lm-arrow">──▶<small>matches id</small></div>
+        <div class="lm-box">
+          <span class="cap">home firmware catalog</span>
+          <b>ESP32 Bus Pirate</b> row<br>
+          <span style="font-size:12px;color:var(--green)">grows a <code style="font-size:11px">[guide]</code> link →</span>
+        </div>
+      </div>
+    </div>
+
+    <ul>
+      <li><strong>Project / hardware tags</strong> (a <code>firmware</code> id set) add a <code>[guide]</code> link to that firmware's row on the home page, pointing at the index filtered to the tag. The guide shows the tag as a pill. You set the tag once and both links follow.</li>
+      <li><strong>Topic tags</strong> (<code>firmware: null</code> — like <code>lora</code>, <code>i2c</code>, <code>rf</code>) are pure filters. Use them so readers can slice the list by subject.</li>
+      <li><strong>Deep links:</strong> <code>tutorials/?tag=lora</code> opens the index pre-filtered. Share those anywhere.</li>
+    </ul>
+
+    <h3>Adding a new tag</h3>
+    <p>If your guide needs a tag that doesn't exist yet, add it to the <code>tags</code> registry (pick a color from the palette), then use its id in the guide's <code>tags</code> array and in the header pills. If it should light up a firmware row, set <code>firmware</code> to that entry's id; otherwise <code>null</code>.</p>
+    <div class="palette">
+      <span class="sw" style="background:#00a35f">#00a35f green</span>
+      <span class="sw" style="background:#d6008f">#d6008f magenta</span>
+      <span class="sw" style="background:#c77d00">#c77d00 amber</span>
+      <span class="sw" style="background:#2b8a9e">#2b8a9e teal</span>
+      <span class="sw" style="background:#7a5ea8">#7a5ea8 violet</span>
+    </div>
+
+    <h2>Three gotchas that trip people up</h2>
+    <div class="callout warn"><span class="h">!! color has to match in two places</span> The index reads a tag's color from <code>tutorials.json</code>, but the pills in a guide's <code>&lt;header&gt;</code> hardcode it inline (<code>style="background:#d6008f"</code>). If you change a tag color, change it both places or the pill and the chip won't match.</div>
+    <div class="callout warn"><span class="h">!! guide header pills link with <code>./?tag=</code>, not <code>?tag=</code></span> A bare <code>?tag=badge</code> is relative to the guide's own URL, so it just reloads the guide. The leading <code>./</code> sends the reader to the index, filtered. (The template already does this right — keep it.)</div>
+    <div class="callout info"><span class="h">// images</span> Put screenshots/photos in <code>tutorials/assets/</code> and reference them relatively (<code>&lt;img src="assets/shot.png"&gt;</code>). Until you have the real image, leave the <code>figure.shot</code> placeholder frame — it renders as a labeled empty box so the layout is already correct and you can see exactly what to capture. Keep images web-sized (≤ ~300 KB).</div>
+
+    <h2>Copy-paste starting point</h2>
+    <p>The fastest path: duplicate the template and the entry below, rename, and fill in.</p>
+    <pre><code><span class="c"># from the tutorials/ folder</span>
+cp _template.html my-slug.html
+<span class="c"># then edit my-slug.html, and add the JSON entry above to tutorials.json</span>
+git add my-slug.html tutorials.json
+git commit -m "tutorial: my slug"
+git push</code></pre>
+
+    <div class="callout tip"><span class="h">// full reference</span> This page is the visual tour; the complete written spec (every field, conventions, the tag registry schema) lives in <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>, and the starting HTML is <a href="_template.html">_template.html</a>.</div>
+
+    <div class="step-nav">
+      <a href="./">← all tutorials</a>
+      <a href="_template.html">open the template →</a>
+    </div>
+  </article>
+</div>
+
+<footer class="t-foot">
+  <div class="wrap">
+    <span># ScriptKitty DEF CON Badge — <a href="https://retia.io" target="_blank" rel="noopener">Retia LLC</a> × <a href="https://www.iotvillage.org" target="_blank" rel="noopener">IoT Village</a></span>
+    <span><a href="./">← all tutorials</a></span>
+  </div>
+</footer>
+</body>
+</html>
