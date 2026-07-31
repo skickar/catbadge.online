@@ -14,6 +14,8 @@
   var serText = '// serial monitor idle — plug a badge in and hit CONNECT';
   var serOn = false;
   var serPort = null, serReader = null, serReading = false;
+  // firmwareId -> {tag, count} for the [guides] cross-link (filled from tutorials/tutorials.json)
+  var guidesByFw = {};
 
   function sel() { for (var i = 0; i < fw.length; i++) if (fw[i].id === selId) return fw[i]; return null; }
   function curBuild() { var s = sel(); return (s && s.builds[selBuild]) || null; }
@@ -133,9 +135,34 @@
       ls.href = f.src; ls.target = '_blank'; ls.rel = 'noopener'; ls.className = 'link-dim'; ls.textContent = '[src]';
       links.appendChild(lf); links.appendChild(ld); links.appendChild(ls);
 
+      // cross-link to Tutorials when a guide is tagged to this firmware
+      var g = guidesByFw[f.id];
+      if (g) {
+        var lg = document.createElement('a');
+        lg.href = 'tutorials/?tag=' + g.tag;
+        lg.className = 'link-guide';
+        lg.textContent = g.count > 1 ? '[guides ' + g.count + ']' : '[guide]';
+        links.appendChild(lg);
+      }
+
       row.appendChild(tile); row.appendChild(nameCol); row.appendChild(descCol); row.appendChild(links);
       cat.appendChild(row);
     });
+  }
+
+  // Build firmwareId -> {tag,count} from the tutorials manifest so catalog rows can
+  // link to their guides. Additive + fault-tolerant: never blocks the catalog render.
+  function loadGuideLinks() {
+    fetch('tutorials/tutorials.json').then(function (r) { return r.json(); }).then(function (data) {
+      var tags = data.tags || {}, list = data.tutorials || [];
+      Object.keys(tags).forEach(function (t) {
+        var fwId = tags[t] && tags[t].firmware;
+        if (!fwId) return;
+        var n = list.filter(function (g) { return (g.tags || []).indexOf(t) !== -1; }).length;
+        if (n) guidesByFw[fwId] = { tag: t, count: n };
+      });
+      if (fw.length) renderCatalog();
+    }).catch(function () { /* tutorials optional — leave catalog as-is */ });
   }
 
   // --- authorization gate (transmit/attack-capable firmware) -----------------
@@ -342,6 +369,8 @@
       renderFlashPane();
       renderCatalog();
     }).catch(function (e) { flog('!! failed to load manifest.json: ' + e.message); });
+
+    loadGuideLinks();
 
     $('fw-select').addEventListener('change', function (ev) { pickFirmware(ev.target.value); });
     $('btn-flash').addEventListener('click', doFlash);

@@ -65,6 +65,8 @@ button[disabled]:hover { background: #14181b; }
 
 .link-dim { color: #98a09a; }
 .link-dim:hover { color: #d6008f; }
+.link-guide { color: #00a35f; }
+.link-guide:hover { color: #d6008f; }
 .link-lit { color: #3dffa0; font-weight: 600; }
 .link-lit:hover { color: #ff4fd8; }
 .link-static { color: #3dffa0; }

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- TITLE: keep the "… — ScriptKitty Badge Tutorials" suffix -->
+<title>YOUR TITLE — ScriptKitty Badge Tutorials</title>
+<meta name="description" content="One-sentence summary of the guide.">
+<meta property="og:title" content="YOUR TITLE">
+<meta property="og:description" content="One-sentence summary.">
+<meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
+<meta property="og:url" content="https://www.catbadge.online/tutorials/YOUR-SLUG.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tutorial.css">
+</head>
+<body>
+<!-- ===== shared nav — leave as-is ===== -->
+<nav class="t-nav">
+  <a href="../" class="wordmark" style="color:inherit;">=^..^= <span class="kw">SCRIPTKITTY</span>//BADGE</a>
+  <span class="spacer"></span>
+  <a href="../#flash" class="navlink">Flash</a>
+  <a href="../#firmware" class="navlink">Firmware</a>
+  <a href="./" class="navlink" style="color:#00a35f;">Tutorials</a>
+  <a href="../#flash" class="pill">[ flash ]</a>
+</nav>
+
+<div class="wrap-narrow">
+  <header class="guide-hero">
+    <!-- breadcrumb: Tutorials / <area> / <topic> -->
+    <div class="crumbs"><a href="./">Tutorials</a> / area / topic</div>
+    <h1 class="guide-h1">Your guide title</h1>
+    <p class="guide-sub">One or two sentences: what the reader will accomplish and why it's worth their time.</p>
+    <!-- tag pills: one per tag, hrefs point at ?tag=<id>; colors must match tutorials.json -->
+    <div class="guide-meta">
+      <a class="card-tag" href="./?tag=badge" style="background:#00a35f;">DEF CON Badge</a>
+      <a class="card-tag" href="./?tag=SOME-TAG" style="background:#d6008f;">Tag Label</a>
+      <span>·</span><span>difficulty</span><span>·</span><span>~NN min</span><span>·</span><span>updated YYYY-MM-DD</span>
+    </div>
+  </header>
+
+  <article class="guide">
+    <p>Opening paragraph.</p>
+
+    <h2>1 — First step</h2>
+    <p>Body text. Inline <code>code</code> and <a href="../#flash">deep links into the main site</a> work.</p>
+
+    <!-- code block: wrap comments/prompts in <span class="c"> and highlights in <span class="g"> -->
+    <pre><code><span class="c">&gt;</span> some command
+output line
+<span class="c">&gt;</span> next command   <span class="c"># a comment</span></code></pre>
+
+    <!-- callout kinds: tip (green) · info (teal) · warn (amber) · danger (magenta) -->
+    <div class="callout tip"><span class="h">// tip</span> A helpful aside.</div>
+    <div class="callout warn"><span class="h">!! caution</span> Something that can go wrong.</div>
+    <div class="callout danger"><span class="h">!! danger</span> Legal / safety / hardware-damage warning.</div>
+    <div class="callout info"><span class="h">// note</span> Background context.</div>
+
+    <!-- figure: replace the .frame div with <img src="assets/your-shot.png" alt="..."> when you have the image -->
+    <figure class="shot">
+      <div class="frame">[ describe the screenshot/photo that goes here ]</div>
+      <figcaption>Caption.</figcaption>
+    </figure>
+
+    <!-- pinout / spec table -->
+    <table class="ptable">
+      <thead><tr><th>Col</th><th>Col</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">x</td><td>y</td></tr>
+      </tbody>
+    </table>
+
+    <div class="step-nav">
+      <a href="./">← all tutorials</a>
+      <a href="../#flash">next action →</a>
+    </div>
+  </article>
+</div>
+
+<footer class="t-foot">
+  <div class="wrap">
+    <span># ScriptKitty DEF CON Badge — <a href="https://retia.io" target="_blank" rel="noopener">Retia LLC</a> × <a href="https://www.iotvillage.org" target="_blank" rel="noopener">IoT Village</a></span>
+    <span><a href="./">← all tutorials</a></span>
+  </div>
+</footer>
+</body>
+</html>

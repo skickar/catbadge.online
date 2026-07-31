@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hack LoRa &amp; read I2C with the badge's Bus Pirate — ScriptKitty Badge Tutorials</title>
+<meta name="description" content="Turn the badge into a multi-protocol workbench: scan I2C and read a BME280, then send and sniff real LoRa — including talking to a live Meshtastic node. With the badge-specific tweaks and the connector that will bite you.">
+<meta property="og:title" content="Hack LoRa & read I2C with the badge's Bus Pirate">
+<meta property="og:description" content="A hands-on Bus Pirate walkthrough for the ScriptKitty DEF CON badge.">
+<meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
+<meta property="og:url" content="https://www.catbadge.online/tutorials/bus-pirate-lora-i2c.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tutorial.css">
+</head>
+<body>
+<nav class="t-nav">
+  <a href="../" class="wordmark" style="color:inherit;">=^..^= <span class="kw">SCRIPTKITTY</span>//BADGE</a>
+  <span class="spacer"></span>
+  <a href="../#flash" class="navlink">Flash</a>
+  <a href="../#firmware" class="navlink">Firmware</a>
+  <a href="./" class="navlink" style="color:#00a35f;">Tutorials</a>
+  <a href="../#flash" class="pill">[ flash ]</a>
+</nav>
+
+<div class="wrap-narrow">
+  <header class="guide-hero">
+    <div class="crumbs"><a href="./">Tutorials</a> / bus_pirate / lora + i2c</div>
+    <h1 class="guide-h1">Hack LoRa &amp; read I2C with the badge's Bus Pirate</h1>
+    <p class="guide-sub">The badge's Bus Pirate build turns it into a pocket protocol workbench. We'll scan an I2C bus and read a real sensor, then send and sniff LoRa on the air — including making the badge talk to a live Meshtastic node — and point out the badge-specific tweaks and the one connector that will bite you.</p>
+    <div class="guide-meta">
+      <a class="card-tag" href="./?tag=badge" style="background:#00a35f;">DEF CON Badge</a>
+      <a class="card-tag" href="./?tag=bus-pirate" style="background:#d6008f;">Bus Pirate</a>
+      <a class="card-tag" href="./?tag=i2c" style="background:#2b8a9e;">I2C</a>
+      <a class="card-tag" href="./?tag=lora" style="background:#c77d00;">LoRa</a>
+      <span>·</span><span>intermediate</span><span>·</span><span>~25 min</span><span>·</span><span>updated 2026-07-31</span>
+    </div>
+  </header>
+
+  <article class="guide">
+
+    <p>The <strong>ESP32 Bus Pirate</strong> (<a href="https://github.com/geo-tp/ESP32-Bit-Pirate" target="_blank" rel="noopener">geo-tp / KonradIT</a>) is a Bus Pirate–style multitool: one CLI that speaks I2C, SPI, UART, 1-Wire, and more, with Wi-Fi/BLE scanners and radio tools bolted on. We ported it to the badge so the whole thing runs on the 2.4″ TFT with the d-pad, and taught it to drive the badge's SX1276 LoRa radio. This guide gets you from "flashed" to "talking to real hardware and real mesh nodes."</p>
+
+    <div class="callout danger">
+      <span class="h">!! authorized use only</span>
+      This build is transmit- and attack-capable (Wi-Fi deauth/sniff, BLE spoof, LoRa/Sub-GHz transmit, bus/RF jam). Only point it at hardware, networks, and RF <strong>you own or are explicitly authorized to test</strong>. The flasher asks you to confirm this before it writes the image.
+    </div>
+
+    <h2>What you'll need</h2>
+    <ul>
+      <li>A ScriptKitty badge with the <strong>915&nbsp;MHz antenna attached</strong> (never TX without it — you can cook the radio's PA).</li>
+      <li>A USB-C cable and a Chromium browser (Chrome/Edge) for the in-browser flasher and serial console.</li>
+      <li>For the I2C demo: any 3.3&nbsp;V I2C sensor. We use a <strong>BME280</strong> (temp/humidity/pressure), but a display or any breakout works.</li>
+      <li>For the LoRa demo: ideally a <strong>second badge</strong> (or any Meshtastic node) within a few meters.</li>
+      <li>A few jumper wires. <em>Read the connector warning below before you plug anything in.</em></li>
+    </ul>
+
+    <h2>1 — Flash the Bus Pirate build</h2>
+    <p>Open the flasher, pick <strong>ESP32 Bus Pirate</strong> from the dropdown, and flash it over Web Serial. It's a complete factory image written at <code>0x0</code> — no other steps.</p>
+    <p><a class="mono" href="../#flash" style="font-weight:600;">→ open the flasher (ESP32 Bus Pirate)</a></p>
+    <div class="callout info">
+      <span class="h">// how you'll talk to it</span>
+      The Bus Pirate exposes the same CLI three ways: <strong>USB serial</strong> (the <a href="../#serial">serial monitor</a> on this site, 115200 baud), a <strong>Wi-Fi web UI</strong> (it hosts an AP named <code>ESP32-Bit-Pirate</code>, password <code>readytoboard</code>, at <code>192.168.4.1</code>), and directly <strong>on the badge screen</strong> with the d-pad. This guide uses the USB serial console — connect, and you'll get the banner and a <code>&gt;</code> prompt. Type <code>help</code> anytime.
+    </div>
+
+    <figure class="shot">
+      <div class="frame">[ screenshot: the Bus Pirate banner + help output in the serial console ]</div>
+      <figcaption>The CLI banner over USB serial. Replace this frame with a real capture.</figcaption>
+    </figure>
+
+    <h2>2 — Wire I2C the right way (read this first)</h2>
+    <div class="callout danger">
+      <span class="h">!! ERRATA-01 — the Qwiic connectors are pin-reversed</span>
+      The badge's Qwiic/STEMMA-QT jacks (<strong>J6 for I2C, J4 for UART</strong>) are wired <strong>backwards</strong> versus the standard — power and ground are swapped. A stock Qwiic cable will feed your sensor +3.3&nbsp;V and GND on the wrong pins: it won't power up, and a bigger draw can even brown out the badge. <strong>Do not trust the Qwiic plug.</strong> Hand-wire to the <strong>SAO header (J5)</strong> instead, and meter it before you connect anything you care about.
+    </div>
+
+    <p>Wire your sensor to the SAO header:</p>
+    <table class="ptable">
+      <thead><tr><th>SAO J5 pin</th><th>Signal</th><th>Badge GPIO</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>+3.3&nbsp;V</td><td class="mono">—</td></tr>
+        <tr><td class="mono">2</td><td>GND</td><td class="mono">—</td></tr>
+        <tr><td class="mono">3</td><td>SDA</td><td class="mono">GPIO 35</td></tr>
+        <tr><td class="mono">4</td><td>SCL</td><td class="mono">GPIO 36</td></tr>
+      </tbody>
+    </table>
+
+    <figure class="shot">
+      <div class="frame">[ photo: BME280 hand-wired to the SAO header, meter on the rail ]</div>
+      <figcaption>A BME280 on J5. Meter pin 1→2 for 3.3 V before connecting the sensor.</figcaption>
+    </figure>
+
+    <h2>3 — Scan the bus and read a register</h2>
+    <p>In the serial console, drop into I2C mode and scan. The badge Bus Pirate also paints the scan on the TFT, so you get results on-screen and over serial at once.</p>
+    <pre><code><span class="c">&gt;</span> mode i2c
+<span class="c">i2c&gt;</span> scan
+Scanning 0x08..0x77 ...
+  found: <span class="g">0x76</span>
+1 device(s)</code></pre>
+    <p><code>0x76</code> is the BME280's default address. Confirm the chip by reading its ID register (<code>0xD0</code>) — a BME280 returns <code>0x60</code>:</p>
+    <pre><code><span class="c">i2c&gt;</span> read 0x76 0xD0 1
+0x76 [0xD0] -&gt; <span class="g">0x60</span>   <span class="c"># 0x60 = BME280</span></code></pre>
+    <div class="callout tip">
+      <span class="h">// what you just proved</span>
+      A clean <code>scan → 0x76</code> and <code>chip-id 0x60</code> is the end-to-end "the bus works" check. From here the same <code>read</code>/<code>write</code> commands talk to any I2C target — EEPROMs, displays, sensors, another MCU pretending to be a peripheral.
+    </div>
+
+    <figure class="shot">
+      <div class="frame">[ screenshot: on-screen I2C scan result on the badge TFT ]</div>
+      <figcaption>The scan rendered on the badge screen — one of the badge-specific additions.</figcaption>
+    </figure>
+
+    <h2>4 — Send and sniff LoRa</h2>
+    <p>This is the headline feature we added: the upstream project ships an SX126x driver, but the badge's radio is an <strong>RFM95W (SX1276)</strong>, so we wrote a dedicated SX127x driver for it. Core radio ops — send, receive, sniff, RSSI, set-frequency, airtime — run clean.</p>
+    <div class="callout warn">
+      <span class="h">!! antenna on, every time</span>
+      Attach the 915&nbsp;MHz antenna before any transmit (send, spam, jam, mesh). Transmitting into no antenna stresses the SX1276 power amp.
+    </div>
+
+    <h3>Badge → badge</h3>
+    <p>On the <strong>receiver</strong> badge, drop into LoRa mode and listen:</p>
+    <pre><code><span class="c">&gt;</span> mode lora
+<span class="c">lora&gt;</span> receive</code></pre>
+    <p>On the <strong>sender</strong> badge, transmit a payload:</p>
+    <pre><code><span class="c">lora&gt;</span> send RXTEST-from-badge-A</code></pre>
+    <p>The sender reports <code>TxDone</code> plus airtime; the receiver prints the payload with signal stats. In our bench runs, badge-to-badge at close range read about <strong>RSSI −57 to −81&nbsp;dBm, SNR ~13&nbsp;dB</strong> — a solid link.</p>
+    <pre><code><span class="c">lora&gt;</span> <span class="g">RX</span> "RXTEST-from-badge-A"  rssi=-57 dBm  snr=13.0 dB</code></pre>
+
+    <figure class="shot">
+      <div class="frame">[ screen recording / photo: two badges, one sending, one showing the received line + RSSI ]</div>
+      <figcaption>The two-badge round trip — the most reliable live LoRa demo.</figcaption>
+    </figure>
+
+    <h3>Waterfall — see the band</h3>
+    <p>Sweep the spectrum and watch it paint as a heat map (blue → red) on the TFT:</p>
+    <pre><code><span class="c">lora&gt;</span> waterfall</code></pre>
+    <div class="callout info">
+      <span class="h">// a tweak worth knowing</span>
+      The radio and the display share one SPI bus on the badge. Naively reading RSSI and drawing to the screen on <em>every</em> point deadlocks the board — so the badge build batches a whole sweep on the radio, hands the bus back to the display once, then paints all the rows. If you fork this, keep radio ops and TFT draws from interleaving on the shared bus.
+    </div>
+
+    <h2>5 — Talk to a real Meshtastic node</h2>
+    <p>The badge Bus Pirate's <code>mesh</code> sub-shell speaks real Meshtastic, so you can transmit a text that pops up on any Meshtastic node or phone nearby. The defaults don't match a stock US node out of the box — set these three first:</p>
+    <table class="ptable">
+      <thead><tr><th>Setting</th><th>Value</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>preset</td><td class="mono">LONG_FAST</td><td>= BW250 / SF11 / CR4:5</td></tr>
+        <tr><td>frequency</td><td class="mono">906.875 MHz</td><td>US LongFast default — must set manually</td></tr>
+        <tr><td>key</td><td class="mono">AQ==</td><td>the default public channel PSK (not preloaded)</td></tr>
+      </tbody>
+    </table>
+    <pre><code><span class="c">&gt;</span> mode mesh
+<span class="c">mesh&gt;</span> 2   <span class="c"># preset  -&gt; LONG_FAST</span>
+<span class="c">mesh&gt;</span> 3   <span class="c"># setfreq -&gt; 906.875</span>
+<span class="c">mesh&gt;</span> 4   <span class="c"># setkey  -&gt; AQ==</span>
+<span class="c">mesh&gt;</span> 6   <span class="c"># send-text -&gt; "hello from the badge"</span></code></pre>
+    <p>On our bench, a text sent this way appeared on a live Meshtastic node, which added the badge as a new node and rebroadcast the message into its mesh.</p>
+    <div class="callout tip">
+      <span class="h">// demo tip</span>
+      Transmitting <em>to</em> a node is the deterministic show — a real node's own RF can be sparse (it may be MQTT-bridged), so passively sniffing it (<code>receive</code>) can sit quiet for 30&nbsp;s+. For a crowd, send text and point at the phone.
+    </div>
+
+    <figure class="shot">
+      <div class="frame">[ screenshot: the sent text arriving on a Meshtastic phone/app, badge shown as a new node ]</div>
+      <figcaption>The badge's message landing on a stock Meshtastic client.</figcaption>
+    </figure>
+
+    <h2>What we changed for the badge</h2>
+    <p>If you're reading the source or forking the port, the badge-specific work lives behind <code>-DDEVICE_RETIA_BADGE</code>:</p>
+    <ul>
+      <li>An <strong>ILI9341 TFT view</strong> (the upstream target is ST7789) driving the badge's 240×320 panel.</li>
+      <li>A <strong>d-pad + A/B input mapping</strong> onto the selector UI (LEFT/RIGHT move, A = OK, B = back).</li>
+      <li>A poll-based <strong>SX1276 LoRa driver</strong> that bit-bangs the shared SPI and hands the pins back to the display, with a bus-reacquire around every radio op so the TFT and radio don't collide.</li>
+      <li>On-screen <strong>bus scan + register monitor</strong> and the <strong>waterfall heat map</strong>.</li>
+      <li>Usable out of the box: <strong>I2C, UART, 1-Wire, DIO, LED (the ear NeoPixels), USB-HID, BLE, Wi-Fi</strong>; SPI/2WIRE/3WIRE/JTAG via SAO jumpers.</li>
+    </ul>
+    <div class="callout warn">
+      <span class="h">!! don't beacon with the ears</span>
+      Driving the 10 ear NeoPixels at high brightness on USB-only power can brown out the badge (it may latch and stop enumerating until you unplug it). Keep LED demos dim, or run them on battery.
+    </div>
+
+    <h2>Where to go next</h2>
+    <ul>
+      <li><a href="https://github.com/RetiaLLC/ESP32-Bus-Pirate/tree/retia-badge-port" target="_blank" rel="noopener">Source (retia-badge-port branch)</a> and the <a href="https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.0" target="_blank" rel="noopener">badge-v1.0 release</a>.</li>
+      <li>The badge <a href="../#hardware">pinout &amp; hardware notes</a> — the shared-bus rule and all the quirks.</li>
+      <li>Upstream <a href="https://github.com/geo-tp/ESP32-Bit-Pirate/wiki" target="_blank" rel="noopener">ESP32 Bus Pirate wiki</a> for the full command set.</li>
+    </ul>
+
+    <div class="step-nav">
+      <a href="./">← all tutorials</a>
+      <a href="../#flash">flash the Bus Pirate →</a>
+    </div>
+  </article>
+</div>
+
+<footer class="t-foot">
+  <div class="wrap">
+    <span># ScriptKitty DEF CON Badge — <a href="https://retia.io" target="_blank" rel="noopener">Retia LLC</a> × <a href="https://www.iotvillage.org" target="_blank" rel="noopener">IoT Village</a></span>
+    <span><a href="./">← all tutorials</a></span>
+  </div>
+</footer>
+</body>
+</html>
