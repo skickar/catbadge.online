@@ -190,12 +190,12 @@
       "id": "bitpirate",
       "logo": "assets/logo-bitpirate.png",
       "name": "ESP32 Bus Pirate",
-      "ver": "badge-v1.2",
+      "ver": "badge-v1.2.1",
       "desc": "A Bus Pirate-style multi-protocol workbench, native on the badge TFT: one CLI (USB serial, Wi-Fi web UI, or browser Web Serial) that speaks I2C/SPI/UART/1-Wire/JTAG and more — with on-screen bus scan + live register monitor, a BME280 environment dashboard that colours the ears by temperature, Wi-Fi/BLE scanners, and on-board LoRa TX/RX (verified badge-to-badge).",
       "buildsLine": "1 badge-native build · transmit-capable · authorized use only",
-      "docs": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.2",
+      "docs": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.2.1",
       "src": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/tree/retia-badge-port",
-      "page": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.2",
+      "page": "https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.2.1",
       "note": "⚠ Transmit- & attack-capable: Wi-Fi deauth/sniff, BLE spoof/sniff, LoRa & RF transmit, bus/RF jam. Use ONLY on hardware, networks & RF you own or are authorized to test. Never TX on LoRa without a 915 MHz antenna. I2C targets go on the SAO header (J5), not Qwiic.",
       "gate": true,
       "capabilities": [
@@ -210,7 +210,7 @@
           "label": "full multitool — buses + Wi-Fi/BLE/LoRa, on-screen scan & BME dash",
           "url": "firmware/buspirate-badge.factory.bin",
           "addr": 0,
-          "sha256": "9d86bb7b9229dd5b36ede335f711a9949c9cc4ccefdd1b8f25daaa4c6bff75d2"
+          "sha256": "695a924b2502d7e25b8057c3875d239c373009075f11e1cfee5f0772d6851cc6"
         }
       ]
     }
