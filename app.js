@@ -51,8 +51,8 @@
     flashing = on;
     $('btn-flash').disabled = on;
     $('btn-local').disabled = on;
-    $('btn-flash').textContent = on ? '[ FLASHING… ]' : '[ CONNECT & FLASH ]';
-    if (!on) setProgress(-1);
+    if (on) $('btn-flash').textContent = '[ FLASHING… ]';
+    else { setProgress(-1); renderFlashPane(); }
   }
 
   // --- flash pane ------------------------------------------------------------
@@ -67,6 +67,11 @@
     $('fw-builds').style.display = hasBuilds ? 'grid' : 'none';
     $('fw-nobuild').style.display = (s && !s.builds.length) ? 'block' : 'none';
     if (s && s.page) $('fw-page').href = s.page;
+    // Context-aware primary button: flash a hosted image, or (when there's none) send
+    // the user to the release page instead of erroring on an empty build list.
+    var btn = $('btn-flash');
+    if (hasBuilds) { btn.textContent = '[ CONNECT & FLASH ]'; btn.dataset.mode = 'flash'; }
+    else { btn.textContent = '[ OPEN RELEASE PAGE ↗ ]'; btn.dataset.mode = 'page'; }
     var rows = $('fw-build-rows');
     rows.innerHTML = '';
     if (hasBuilds) {
@@ -371,6 +376,31 @@
     })();
   }
 
+  // --- chapter rail scrollspy ------------------------------------------------
+  // Highlights the section you're currently reading: the last one whose top has
+  // passed a line ~30% down the viewport. Always exactly one active, no gaps.
+  function initChapters() {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.chapters a[data-sec]'));
+    if (!links.length) return;
+    var secs = links.map(function (a) { return document.getElementById(a.getAttribute('data-sec')); }).filter(Boolean);
+    function update() {
+      var current;
+      // at the very bottom of the page, the last section wins even if it never
+      // reaches the line (there's no more content below it to scroll).
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        current = secs[secs.length - 1].id;
+      } else {
+        var line = window.innerHeight * 0.3;
+        current = links[0].getAttribute('data-sec');
+        secs.forEach(function (el) { if (el.getBoundingClientRect().top <= line) current = el.id; });
+      }
+      links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('data-sec') === current); });
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
   // --- boot ------------------------------------------------------------------
   function boot() {
     fetch('manifest.json').then(function (r) { return r.json(); }).then(function (m) {
@@ -391,7 +421,14 @@
     loadGuideLinks();
 
     $('fw-select').addEventListener('change', function (ev) { pickFirmware(ev.target.value); });
-    $('btn-flash').addEventListener('click', doFlash);
+    $('btn-flash').addEventListener('click', function () {
+      var s = sel();
+      if (this.dataset.mode === 'page') {
+        if (s && s.page) window.open(s.page, '_blank', 'noopener');
+        return;
+      }
+      doFlash();
+    });
     $('btn-local').addEventListener('click', function () { $('fw-file').click(); });
     $('fw-file').addEventListener('change', flashLocal);
     $('btn-ser').addEventListener('click', function () { serOn ? serDisconnect() : serConnect(); });
@@ -399,6 +436,7 @@
     $('btn-ser-send').addEventListener('click', serSendLine);
     $('ser-in').addEventListener('keydown', function (ev) { if (ev.key === 'Enter') serSendLine(); });
     startSpin();
+    initChapters();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

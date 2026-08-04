@@ -7,12 +7,20 @@
       "name": "Badge Launcher v2 \"Touch\"",
       "ver": "v2.0.0",
       "desc": "The flagship badge experience. One flash + one FAT micro-SD = pick-what-you-run: two touch mesh messengers (MeshCore + Meshtastic MUI), classic Meshtastic, a Reticulum RNode, an NES emulator with 37 homebrew games, and WLEDkitty — switchable from an on-badge menu in ~10 s.",
-      "buildsLine": "flash at scriptkitty.sh or from the v2.0.0 release · needs FAT micro-SD",
+      "buildsLine": "1 image, flashable here — then add a FAT micro-SD with the app pack from the release",
       "docs": "https://github.com/RetiaLLC/badge-launcher",
       "src": "https://github.com/RetiaLLC/badge-launcher",
       "page": "https://github.com/RetiaLLC/badge-launcher/releases/tag/v2.0.0",
       "note": "Hold UP at reset to get back to the launcher from any guest. Nine lives, one badge.",
-      "builds": []
+      "builds": [
+        {
+          "file": "launcher-v2.factory.bin",
+          "label": "the launcher firmware — after flashing, add a FAT micro-SD (unzip sd-card-apps-v2 from the release)",
+          "url": "firmware/launcher-v2.factory.bin",
+          "addr": 0,
+          "sha256": "1636737737c3fefed8c8d1affcf87409a24f62c846de5d3c7df7756b4fc5522e"
+        }
+      ]
     },
     {
       "id": "doom",
@@ -168,11 +176,19 @@
       "name": "WLEDkitty",
       "ver": "WLED fork",
       "desc": "A WLED fork designed to run on the badge — drive the ten NeoPixel ears (and anything on the NeoPixel-out header) from the WLED web UI or phone app. Boots into a pride rainbow; A/B + d-pad switch effects on the go, with live status on the TFT.",
-      "buildsLine": "flash at scriptkitty.sh · runs as a launcher SD guest too",
+      "buildsLine": "1 image, flashable here · also runs as a launcher SD guest",
       "docs": "https://github.com/RetiaLLC/WLEDkitty",
       "src": "https://github.com/RetiaLLC/WLEDkitty",
       "page": "https://scriptkitty.sh",
-      "builds": []
+      "builds": [
+        {
+          "file": "wledkitty-badge.factory.bin",
+          "label": "standalone WLEDkitty — boots a Pride rainbow; replaces the SD launcher",
+          "url": "firmware/wledkitty-badge.factory.bin",
+          "addr": 0,
+          "sha256": "03899f9eb9587d3ba312a0682d82b9afc20042bd37e45da81e06eaa090b09797"
+        }
+      ]
     },
     {
       "id": "templeos",

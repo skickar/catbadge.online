@@ -4,6 +4,10 @@ The Tutorials section works like the firmware catalog: a JSON file lists the gui
 builds itself from it. You add a guide by dropping in one HTML file and adding one JSON entry.
 There's no build step.
 
+**Guides are contributed by pull request.** Fork `skickar/catbadge.online`, make your changes on a
+branch, and open a PR. A maintainer reviews and merges; the guide goes live on the next build.
+Nobody pushes straight to `main`.
+
 ## The three-step recipe
 
 1. **Copy the template.** `cp _template.html <slug>.html` (slug = lowercase, hyphens, e.g.
@@ -27,8 +31,9 @@ There's no build step.
    ```
    The index sorts newest-first by `updated` (use `YYYY-MM-DD`).
 
-3. **Push.** Commit `<slug>.html` and the `tutorials.json` change to `main`. The index picks up the
-   new card on the next load.
+3. **Open a PR.** Commit `<slug>.html` and the `tutorials.json` change on a branch and open a pull
+   request against `skickar/catbadge.online`. After a maintainer merges it, the index shows the new
+   card on the next build.
 
 ## Tags — how guides connect to the rest of the site
 

@@ -19,9 +19,8 @@
 <nav class="t-nav">
   <a href="../" class="wordmark" style="color:inherit;">=^..^= <span class="kw">SCRIPTKITTY</span>//BADGE</a>
   <span class="spacer"></span>
-  <a href="../#flash" class="navlink">Flash</a>
-  <a href="../#firmware" class="navlink">Firmware</a>
   <a href="./" class="navlink" style="color:#00a35f;">Tutorials</a>
+  <a href="https://github.com/RetiaLLC/DefconBadge2026" target="_blank" rel="noopener" class="navlink">GitHub</a>
   <a href="../#flash" class="pill">[ flash ]</a>
 </nav>
 
@@ -70,26 +69,25 @@
       <figcaption>The CLI banner over USB serial. Replace this frame with a real capture.</figcaption>
     </figure>
 
-    <h2>2 — Wire I2C the right way (read this first)</h2>
-    <div class="callout danger">
-      <span class="h">!! ERRATA-01 — the Qwiic connectors are pin-reversed</span>
-      The badge's Qwiic/STEMMA-QT jacks (<strong>J6 for I2C, J4 for UART</strong>) are wired <strong>backwards</strong> versus the standard — power and ground are swapped. A stock Qwiic cable will feed your sensor +3.3&nbsp;V and GND on the wrong pins: it won't power up, and a bigger draw can even brown out the badge. <strong>Do not trust the Qwiic plug.</strong> Hand-wire to the <strong>SAO header (J5)</strong> instead, and meter it before you connect anything you care about.
-    </div>
-
-    <p>Wire your sensor to the SAO header:</p>
+    <h2>2 — Wire I2C to the QWIIC connector</h2>
+    <p>Wire the sensor to the badge's QWIIC / I2C connector, matching each lead to the silkscreen label next to it — <strong>3.3V, GND, SDA, SCL</strong> — as in the photo below. The badge routes that connector to its I2C bus (SDA on GPIO&nbsp;35, SCL on GPIO&nbsp;36).</p>
     <table class="ptable">
-      <thead><tr><th>SAO J5 pin</th><th>Signal</th><th>Badge GPIO</th></tr></thead>
+      <thead><tr><th>Connector pin</th><th>Sensor pin</th><th>Badge GPIO</th></tr></thead>
       <tbody>
-        <tr><td class="mono">1</td><td>+3.3&nbsp;V</td><td class="mono">—</td></tr>
-        <tr><td class="mono">2</td><td>GND</td><td class="mono">—</td></tr>
-        <tr><td class="mono">3</td><td>SDA</td><td class="mono">GPIO 35</td></tr>
-        <tr><td class="mono">4</td><td>SCL</td><td class="mono">GPIO 36</td></tr>
+        <tr><td class="mono">3.3V</td><td>VCC / 3V3</td><td class="mono">—</td></tr>
+        <tr><td class="mono">GND</td><td>GND</td><td class="mono">—</td></tr>
+        <tr><td class="mono">SDA</td><td>SDA</td><td class="mono">GPIO 35</td></tr>
+        <tr><td class="mono">SCL</td><td>SCL</td><td class="mono">GPIO 36</td></tr>
       </tbody>
     </table>
+    <div class="callout warn">
+      <span class="h">!! match the silkscreen, and meter it first</span>
+      Wire to the printed labels one lead at a time — don't assume a pre-made keyed QWIIC cable lands power and ground where this board expects them. Before you connect the sensor, meter <strong>3.3V against GND</strong> to confirm the rail, so a swapped lead can't cook the board or the sensor.
+    </div>
 
     <figure class="shot">
-      <div class="frame">[ photo: BME280 hand-wired to the SAO header, meter on the rail ]</div>
-      <figcaption>A BME280 on J5. Meter pin 1→2 for 3.3 V before connecting the sensor.</figcaption>
+      <div class="frame">[ photo goes here — save it to tutorials/assets/i2c-qwiic-wiring.jpg, then swap this frame for an &lt;img&gt; ]</div>
+      <figcaption>A BME280 breakout wired to the badge's QWIIC/I2C connector, each lead matched to the silkscreen label.</figcaption>
     </figure>
 
     <h2>3 — Scan the bus and read a register</h2>
