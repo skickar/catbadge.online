@@ -6,9 +6,9 @@ e.g. `<img src="assets/i2c-qwiic-wiring.jpg" alt="...">`. Keep files web-sized (
 Until an image exists, guides use a `<figure class="shot"><div class="frame">[ describe ]</div></figure>`
 placeholder so the layout is correct and it's clear what to capture.
 
-## Images the Bus Pirate guide (bus-pirate-lora-i2c.html) still needs
+## Images the Bit Pirate guide (bit-pirate-lora-i2c.html) still needs
 - `i2c-qwiic-wiring.jpg` — BME280 wired to the badge's QWIIC/I2C connector (photo provided by Retia).
-- `cli-banner.png` — the Bus Pirate banner + `help` output in the serial console.
+- `cli-banner.png` — the Bit Pirate banner + `help` output in the serial console.
 - `i2c-scan-tft.jpg` — the on-screen I2C scan result on the badge TFT.
 - `lora-badge-to-badge.jpg` — two badges, one sending, one showing the received line + RSSI.
 - `meshtastic-received.png` — the badge's text arriving on a Meshtastic phone/app.

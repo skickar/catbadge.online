@@ -109,8 +109,8 @@
 
     <h2>How tags link everything</h2>
     <p>Tags are the glue. Every tag you use must be declared once in the <code>tags</code> registry at the top of <code>tutorials.json</code>. A tag entry looks like this:</p>
-    <pre><code>"bus-pirate": {
-  <span class="g">"label"</span>: "Bus Pirate",     <span class="c">// text on the chip/pill</span>
+    <pre><code>"bit-pirate": {
+  <span class="g">"label"</span>: "Bit Pirate",     <span class="c">// text on the chip/pill</span>
   <span class="g">"kind"</span>:  "project",       <span class="c">// hardware | project | topic (labeling only)</span>
   <span class="g">"color"</span>: "#d6008f",       <span class="c">// pill color (see palette below)</span>
   <span class="g">"firmware"</span>: "bitpirate",  <span class="c">// ← the cross-link: a firmware id, or null</span>
@@ -124,18 +124,18 @@
         <div class="lm-box">
           <span class="cap">your guide</span>
           <b>Hack LoRa &amp; read I2C…</b><br>
-          <span style="font-size:12px;color:var(--muted)">tagged</span> <span class="lm-pill">Bus Pirate</span>
+          <span style="font-size:12px;color:var(--muted)">tagged</span> <span class="lm-pill">Bit Pirate</span>
         </div>
-        <div class="lm-arrow">──▶<small>tag "bus-pirate"</small></div>
+        <div class="lm-arrow">──▶<small>tag "bit-pirate"</small></div>
         <div class="lm-box">
           <span class="cap">tag registry</span>
-          <b>bus-pirate</b><br>
+          <b>bit-pirate</b><br>
           <span style="font-size:12px">firmware: <code style="font-size:11px">"bitpirate"</code></span>
         </div>
         <div class="lm-arrow">──▶<small>matches id</small></div>
         <div class="lm-box">
           <span class="cap">home firmware catalog</span>
-          <b>ESP32 Bus Pirate</b> row<br>
+          <b>ESP32 Bit Pirate</b> row<br>
           <span style="font-size:12px;color:var(--green)">grows a <code style="font-size:11px">[guide]</code> link →</span>
         </div>
       </div>

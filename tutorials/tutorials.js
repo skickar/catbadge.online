@@ -1,5 +1,5 @@
 /* Tutorials index — renders cards from tutorials.json and drives tag filtering.
-   Deep-link: tutorials/?tag=bus-pirate (or #tag=bus-pirate) pre-selects a filter. */
+   Deep-link: tutorials/?tag=bit-pirate (or #tag=bit-pirate) pre-selects a filter. */
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };

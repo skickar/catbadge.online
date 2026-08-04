@@ -40,7 +40,7 @@ Nobody pushes straight to `main`.
 Every tag must exist in the `tags` map at the top of `tutorials.json`. A tag entry:
 
 ```json
-"bus-pirate": { "label": "Bus Pirate", "kind": "project", "color": "#d6008f",
+"bit-pirate": { "label": "Bit Pirate", "kind": "project", "color": "#d6008f",
                 "firmware": "bitpirate", "section": null }
 ```
 
@@ -52,8 +52,8 @@ Every tag must exist in the `tags` map at the top of `tutorials.json`. A tag ent
   to the same guide).
 - `firmware` — the `id` of a firmware entry in the site's root `manifest.json`, or `null`. **This is
   the cross-link:** when a tag names a firmware id, that firmware's catalog row on the home page
-  grows a `[guides]` link that filters the index to this tag. `bus-pirate → bitpirate` is why the
-  ESP32 Bus Pirate row links here.
+  grows a `[guides]` link that filters the index to this tag. `bit-pirate → bitpirate` is why the
+  ESP32 Bit Pirate row links here.
 - `section` — a URL (e.g. `../#hardware`) or `null`. Reserved for linking a tag to a page section.
 
 **Adding a new tag:** add it to the `tags` map (pick a color from the palette below), then use it

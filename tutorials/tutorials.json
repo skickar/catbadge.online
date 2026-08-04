@@ -2,7 +2,7 @@
   "_note": "Drives the Tutorials index. To add a guide: (1) copy _template.html to <slug>.html and write it, (2) add one object to `tutorials` below, (3) if you use a new tag, add it to `tags`. Newest-first is by `updated`. See CONTRIBUTING.md.",
   "tags": {
     "badge":       { "label": "DEF CON Badge", "kind": "hardware", "color": "#00a35f", "firmware": null,        "section": "../#hardware" },
-    "bus-pirate":  { "label": "Bus Pirate",     "kind": "project",  "color": "#d6008f", "firmware": "bitpirate", "section": null },
+    "bit-pirate":  { "label": "Bit Pirate",     "kind": "project",  "color": "#d6008f", "firmware": "bitpirate", "section": null },
     "meshtastic":  { "label": "Meshtastic",     "kind": "project",  "color": "#00a35f", "firmware": "meshtastic","section": null },
     "meshcore":    { "label": "MeshCore",       "kind": "project",  "color": "#00a35f", "firmware": "meshcore",  "section": null },
     "reticulum":   { "label": "Reticulum",      "kind": "project",  "color": "#d6008f", "firmware": "reticulum", "section": null },
@@ -14,15 +14,15 @@
   },
   "tutorials": [
     {
-      "id": "bus-pirate-lora-i2c",
-      "title": "Hack LoRa & read I2C with the badge's Bus Pirate",
+      "id": "bit-pirate-lora-i2c",
+      "title": "Hack LoRa & read I2C with the badge's Bit Pirate",
       "summary": "Turn the badge into a multi-protocol workbench: scan an I2C bus and read a BME280, then send and sniff real LoRa — including talking to a live Meshtastic node. Covers the badge-specific tweaks (on-screen scan, the shared-bus radio, the waterfall heat map) and the one connector that will bite you.",
-      "tags": ["badge", "bus-pirate", "i2c", "lora", "rf"],
+      "tags": ["badge", "bit-pirate", "i2c", "lora", "rf"],
       "difficulty": "intermediate",
       "minutes": 25,
       "updated": "2026-07-31",
       "author": "Retia",
-      "url": "bus-pirate-lora-i2c.html"
+      "url": "bit-pirate-lora-i2c.html"
     }
   ]
 }

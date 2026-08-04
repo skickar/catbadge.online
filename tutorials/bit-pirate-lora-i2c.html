@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hack LoRa &amp; read I2C with the badge's Bus Pirate — ScriptKitty Badge Tutorials</title>
+<title>Hack LoRa &amp; read I2C with the badge's Bit Pirate — ScriptKitty Badge Tutorials</title>
 <meta name="description" content="Turn the badge into a multi-protocol workbench: scan I2C and read a BME280, then send and sniff real LoRa — including talking to a live Meshtastic node. With the badge-specific tweaks and the connector that will bite you.">
-<meta property="og:title" content="Hack LoRa & read I2C with the badge's Bus Pirate">
-<meta property="og:description" content="A hands-on Bus Pirate walkthrough for the ScriptKitty DEF CON badge.">
+<meta property="og:title" content="Hack LoRa & read I2C with the badge's Bit Pirate">
+<meta property="og:description" content="A hands-on Bit Pirate walkthrough for the ScriptKitty DEF CON badge.">
 <meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
-<meta property="og:url" content="https://www.catbadge.online/tutorials/bus-pirate-lora-i2c.html">
+<meta property="og:url" content="https://www.catbadge.online/tutorials/bit-pirate-lora-i2c.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="../vendor/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../vendor/fonts.css">
@@ -26,12 +26,12 @@
 
 <div class="wrap-narrow">
   <header class="guide-hero">
-    <div class="crumbs"><a href="./">Tutorials</a> / bus_pirate / lora + i2c</div>
-    <h1 class="guide-h1">Hack LoRa &amp; read I2C with the badge's Bus Pirate</h1>
-    <p class="guide-sub">The badge's Bus Pirate build turns it into a pocket protocol workbench. We'll scan an I2C bus and read a real sensor, then send and sniff LoRa on the air — including making the badge talk to a live Meshtastic node — and point out the badge-specific tweaks and the one connector that will bite you.</p>
+    <div class="crumbs"><a href="./">Tutorials</a> / bit_pirate / lora + i2c</div>
+    <h1 class="guide-h1">Hack LoRa &amp; read I2C with the badge's Bit Pirate</h1>
+    <p class="guide-sub">The badge's Bit Pirate build turns it into a pocket protocol workbench. We'll scan an I2C bus and read a real sensor, then send and sniff LoRa on the air — including making the badge talk to a live Meshtastic node — and point out the badge-specific tweaks and the one connector that will bite you.</p>
     <div class="guide-meta">
       <a class="card-tag" href="./?tag=badge" style="background:#00a35f;">DEF CON Badge</a>
-      <a class="card-tag" href="./?tag=bus-pirate" style="background:#d6008f;">Bus Pirate</a>
+      <a class="card-tag" href="./?tag=bit-pirate" style="background:#d6008f;">Bit Pirate</a>
       <a class="card-tag" href="./?tag=i2c" style="background:#2b8a9e;">I2C</a>
       <a class="card-tag" href="./?tag=lora" style="background:#c77d00;">LoRa</a>
       <span>·</span><span>intermediate</span><span>·</span><span>~25 min</span><span>·</span><span>updated 2026-07-31</span>
@@ -40,7 +40,7 @@
 
   <article class="guide">
 
-    <p>The <strong>ESP32 Bus Pirate</strong> (<a href="https://github.com/geo-tp/ESP32-Bit-Pirate" target="_blank" rel="noopener">geo-tp / KonradIT</a>) is a Bus Pirate–style multitool: one CLI that speaks I2C, SPI, UART, 1-Wire, and more, with Wi-Fi/BLE scanners and radio tools bolted on. We ported it to the badge so it runs on the 2.4″ TFT with the d-pad, and taught it to drive the badge's SX1276 LoRa radio. This guide covers scanning a bus, reading a sensor, and putting real LoRa on the air.</p>
+    <p>The <strong>ESP32 Bit Pirate</strong> (<a href="https://github.com/geo-tp/ESP32-Bit-Pirate" target="_blank" rel="noopener">geo-tp / KonradIT</a>) is a multi-protocol bus multitool: one CLI that speaks I2C, SPI, UART, 1-Wire, and more, with Wi-Fi/BLE scanners and radio tools bolted on. We ported it to the badge so it runs on the 2.4″ TFT with the d-pad, and taught it to drive the badge's SX1276 LoRa radio. This guide covers scanning a bus, reading a sensor, and putting real LoRa on the air.</p>
 
     <div class="callout danger">
       <span class="h">!! authorized use only</span>
@@ -56,16 +56,16 @@
       <li>A few jumper wires. <em>Read the connector warning below before you plug anything in.</em></li>
     </ul>
 
-    <h2>1 — Flash the Bus Pirate build</h2>
-    <p>Open the flasher, pick <strong>ESP32 Bus Pirate</strong> from the dropdown, and flash it over Web Serial. It's a complete factory image written at <code>0x0</code> — no other steps.</p>
-    <p><a class="mono" href="../#flash" style="font-weight:600;">→ open the flasher (ESP32 Bus Pirate)</a></p>
+    <h2>1 — Flash the Bit Pirate build</h2>
+    <p>Open the flasher, pick <strong>ESP32 Bit Pirate</strong> from the dropdown, and flash it over Web Serial. It's a complete factory image written at <code>0x0</code> — no other steps.</p>
+    <p><a class="mono" href="../#flash" style="font-weight:600;">→ open the flasher (ESP32 Bit Pirate)</a></p>
     <div class="callout info">
       <span class="h">// how you'll talk to it</span>
-      The Bus Pirate exposes the same CLI three ways: <strong>USB serial</strong> (the <a href="../#serial">serial monitor</a> on this site, 115200 baud), a <strong>Wi-Fi web UI</strong> (it hosts an AP named <code>ESP32-Bit-Pirate</code>, password <code>readytoboard</code>, at <code>192.168.4.1</code>), and directly <strong>on the badge screen</strong> with the d-pad. This guide uses the USB serial console — connect, and you'll get the banner and a <code>&gt;</code> prompt. Type <code>help</code> anytime.
+      The Bit Pirate exposes the same CLI three ways: <strong>USB serial</strong> (the <a href="../#serial">serial monitor</a> on this site, 115200 baud), a <strong>Wi-Fi web UI</strong> (it hosts an AP named <code>ESP32-Bit-Pirate</code>, password <code>readytoboard</code>, at <code>192.168.4.1</code>), and directly <strong>on the badge screen</strong> with the d-pad. This guide uses the USB serial console — connect, and you'll get the banner and a <code>&gt;</code> prompt. Type <code>help</code> anytime.
     </div>
 
     <figure class="shot">
-      <div class="frame">[ screenshot: the Bus Pirate banner + help output in the serial console ]</div>
+      <div class="frame">[ screenshot: the Bit Pirate banner + help output in the serial console ]</div>
       <figcaption>The CLI banner over USB serial. Replace this frame with a real capture.</figcaption>
     </figure>
 
@@ -91,7 +91,7 @@
     </figure>
 
     <h2>3 — Scan the bus and read a register</h2>
-    <p>In the serial console, drop into I2C mode and scan. The badge Bus Pirate also paints the scan on the TFT, so you get results on-screen and over serial at once.</p>
+    <p>In the serial console, drop into I2C mode and scan. The badge Bit Pirate also paints the scan on the TFT, so you get results on-screen and over serial at once.</p>
     <pre><code><span class="c">&gt;</span> mode i2c
 <span class="c">i2c&gt;</span> scan
 Scanning 0x08..0x77 ...
@@ -140,7 +140,7 @@ Scanning 0x08..0x77 ...
     </div>
 
     <h2>5 — Talk to a real Meshtastic node</h2>
-    <p>The badge Bus Pirate's <code>mesh</code> sub-shell speaks real Meshtastic, so you can transmit a text that pops up on any Meshtastic node or phone nearby. The defaults don't match a stock US node out of the box — set these three first:</p>
+    <p>The badge Bit Pirate's <code>mesh</code> sub-shell speaks real Meshtastic, so you can transmit a text that pops up on any Meshtastic node or phone nearby. The defaults don't match a stock US node out of the box — set these three first:</p>
     <table class="ptable">
       <thead><tr><th>Setting</th><th>Value</th><th>Why</th></tr></thead>
       <tbody>
@@ -183,12 +183,12 @@ Scanning 0x08..0x77 ...
     <ul>
       <li><a href="https://github.com/RetiaLLC/ESP32-Bus-Pirate/tree/retia-badge-port" target="_blank" rel="noopener">Source (retia-badge-port branch)</a> and the <a href="https://github.com/RetiaLLC/ESP32-Bus-Pirate/releases/tag/badge-v1.0" target="_blank" rel="noopener">badge-v1.0 release</a>.</li>
       <li>The badge <a href="../#hardware">pinout &amp; hardware notes</a> — the shared-bus rule and all the quirks.</li>
-      <li>Upstream <a href="https://github.com/geo-tp/ESP32-Bit-Pirate/wiki" target="_blank" rel="noopener">ESP32 Bus Pirate wiki</a> for the full command set.</li>
+      <li>Upstream <a href="https://github.com/geo-tp/ESP32-Bit-Pirate/wiki" target="_blank" rel="noopener">ESP32 Bit Pirate wiki</a> for the full command set.</li>
     </ul>
 
     <div class="step-nav">
       <a href="./">← all tutorials</a>
-      <a href="../#flash">flash the Bus Pirate →</a>
+      <a href="../#flash">flash the Bit Pirate →</a>
     </div>
   </article>
 </div>
