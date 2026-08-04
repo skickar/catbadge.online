@@ -203,12 +203,13 @@
       "logo": "assets/logo-templeos.png",
       "name": "TempleOS Portable",
       "ver": "640×480",
-      "desc": "Terry Davis's divine operating system goes portable — HolyC, the oracle, and 16-color glory on the badge TFT. God said 640×480 was enough.",
-      "buildsLine": "flash from the release page — divine intervention not required",
-      "docs": "https://github.com/RetiaLLC/DefconBadge2026",
-      "src": "https://github.com/RetiaLLC/DefconBadge2026",
-      "page": "https://github.com/RetiaLLC/DefconBadge2026/releases",
-      "builds": []
+      "desc": "soneill000's TempleOS tribute for the badge — a HolyC-flavored launcher with ported and reimagined mini-games (the oracle, hymns, 16-color sprite art). Terry dedicated TempleOS to the public domain; this builds on that.",
+      "buildsLine": "build from source with PlatformIO — no prebuilt image published yet",
+      "docs": "https://github.com/soneill000/temple-shrine-esp32",
+      "src": "https://github.com/soneill000/temple-shrine-esp32",
+      "page": "https://github.com/soneill000/temple-shrine-esp32",
+      "builds": [],
+      "note": "No hosted image yet: clone the repo and `pio run -e defcon-badge` (PlatformIO). Ask the author for a release .bin and it can be flashed here directly."
     },
     {
       "id": "bitpirate",
