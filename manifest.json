@@ -54,12 +54,20 @@
       "name": "Anemoia NES",
       "ver": "v1.0.0",
       "desc": "A full NES emulator: drop .nes ROMs on the micro-SD, browse and launch on-badge, play with D-pad + A/B. Save states, chiptune audio through the piezo, curated legally-free homebrew library.",
-      "buildsLine": "1 build on the anemoia-v1.0.0 release",
+      "buildsLine": "1 badge factory image — needs a FAT micro-SD with .nes ROMs",
       "docs": "https://github.com/RetiaLLC/Anemoia-DefconBadge",
       "src": "https://github.com/RetiaLLC/Anemoia-DefconBadge",
       "page": "https://github.com/RetiaLLC/Anemoia-DefconBadge/releases/latest",
       "note": "ROMs: https://github.com/RetiaLLC/Anemoia-DefconBadge/blob/main/GAMES.md",
-      "builds": []
+      "builds": [
+        {
+          "file": "anemoia-badge-factory.bin",
+          "label": "the NES emulator — after flashing, add a FAT micro-SD with .nes ROMs (see GAMES.md)",
+          "url": "firmware/anemoia-badge-factory.bin",
+          "addr": 0,
+          "sha256": "47f09ac38a2437d5a2d0c109ce6a4bc680592decd52fccad706a9977ce985122"
+        }
+      ]
     },
     {
       "id": "meshtastic",
