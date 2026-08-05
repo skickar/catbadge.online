@@ -50,21 +50,19 @@
     <p>Anywhere in the CLI: <code>help</code> lists commands for the current mode, <code>mode</code> lists modes, <strong>ENTER</strong> stops a running command.</p>
 
     <h2>1 — Tap the UART and read the boot log <span class="g">(Flag 0)</span></h2>
-    <p>The node exposes three serial pads: <strong>TX, RX, GND</strong>. Wire the node's <strong>TX → badge RX</strong> and <strong>GND → GND</strong>. Then listen:</p>
+    <p>Connect a Qwiic cable from the node's port marked <strong>UART</strong> to the Qwiic port on your badge — that taps its serial line. Then listen:</p>
     <pre><code><span class="c">&gt;</span> mode uart        <span class="c"># ENTER through the defaults (RX 44 / TX 43 / 115200-8N1)</span>
 <span class="c">&gt;</span> autobaud         <span class="c"># confirm the line speed while the node talks</span>
 <span class="c">&gt;</span> snifftxt         <span class="c"># now power-cycle the node and read its startup chatter</span></code></pre>
     <p>The boot log tells you what you're looking at — the chip, the mesh stack, its partitions.</p>
-    <div class="callout warn"><span class="h">!! quiet tap?</span> If <code>snifftxt</code> shows nothing on a power-cycle: check <strong>GND</strong> is shared and TX→RX is right (<code>swap</code> flips them), and <strong>power the node from a battery, not a laptop</strong> — a USB-powered node often sends its console to USB instead of the tap pad.</div>
+    <div class="callout warn"><span class="h">!! quiet tap?</span> If <code>snifftxt</code> shows nothing on a power-cycle: confirm the cable is on the node's <strong>UART</strong>-marked port (not i2c), try <code>swap</code>, and <strong>power the node from a battery, not a laptop</strong> — a USB-powered node often sends its console to USB instead of the Qwiic line.</div>
 
     <h2>2 — Catch the credential leak <span class="g">(Flag 1)</span></h2>
     <p>Keep sniffing and power-cycle again. This node's factory routine prints its provisioning to the debug line every boot — a real bug class (sensitive data in logs). You'll see a block like:</p>
     <pre><code>==== FACTORY PROVISIONING LOG ====
 <span class="g">[prov] uplink.ssid    = WorkshopNet</span>
 <span class="g">[prov] uplink.key.b64 = U2VjcmV0UGFzcw==</span></code></pre>
-    <p>The network name is in the clear; the password is a short token. It isn't the password directly — it's encoded. The trailing <code>=</code> is a strong hint. Decode it:</p>
-    <pre><code><span class="c">&gt;</span> echo 'U2VjcmV0UGFzcw==' | base64 -d   <span class="c"># -&gt; the Wi-Fi password</span></code></pre>
-    <div class="callout info"><span class="h">// note</span> Base64 isn't encryption — it's a reversible encoding. Spotting it (and the padding) is half the puzzle.</div>
+    <p>The network name is in the clear; the password is a short <strong>token</strong> — not the password itself. Work out what encoding it is and turn it back into the real password. That's the puzzle.</p>
 
     <h2>3 — Join the network and find the node <span class="g">(Flag 2)</span></h2>
     <pre><code><span class="c">&gt;</span> mode wifi
@@ -93,7 +91,7 @@
 
     <h2>The same secret, a second way — over I2C <span class="g">(bonus)</span></h2>
     <p>A device that leaks over one interface usually leaks over another. This target also answers on its
-    <strong>I2C bus</strong> like a cheap config chip. Wire the badge's Qwiic to the node's Qwiic, then:</p>
+    <strong>I2C bus</strong> like a cheap config chip. Connect a Qwiic cable from the node's port marked <strong>i2c</strong> to your badge's Qwiic port, then:</p>
     <pre><code><span class="c">&gt;</span> mode i2c
 <span class="c">&gt;</span> scan            <span class="c"># a config "chip" answers at 0x50</span>
 <span class="c">&gt;</span> dump 0x50       <span class="c"># the Wi-Fi password, in the clear — no network needed</span></code></pre>
