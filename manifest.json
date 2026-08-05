@@ -202,14 +202,22 @@
       "id": "templeos",
       "logo": "assets/logo-templeos.png",
       "name": "TempleOS Portable",
-      "ver": "640×480",
+      "ver": "v1.0.0-demo",
       "desc": "soneill000's TempleOS tribute for the badge — a HolyC-flavored launcher with ported and reimagined mini-games (the oracle, hymns, 16-color sprite art). Terry dedicated TempleOS to the public domain; this builds on that.",
-      "buildsLine": "build from source with PlatformIO — no prebuilt image published yet",
+      "buildsLine": "1 factory image, flashable here — merged from the v1.0.0-demo release",
       "docs": "https://github.com/soneill000/temple-shrine-esp32",
       "src": "https://github.com/soneill000/temple-shrine-esp32",
-      "page": "https://github.com/soneill000/temple-shrine-esp32",
-      "builds": [],
-      "note": "No hosted image yet: clone the repo and `pio run -e defcon-badge` (PlatformIO). Ask the author for a release .bin and it can be flashed here directly."
+      "page": "https://github.com/soneill000/temple-shrine-esp32/releases/tag/v1.0.0-demo",
+      "builds": [
+        {
+          "file": "templeos-v1.0.0-demo.factory.bin",
+          "label": "TempleShrine — HolyC launcher + mini-games (merged factory image)",
+          "url": "firmware/templeos-v1.0.0-demo.factory.bin",
+          "addr": 0,
+          "sha256": "434320e64794447eb1ebf2135e89eb8d3624e4e7d3c97ae72e48b54288119e96"
+        }
+      ],
+      "note": "After flashing, tap RESET once to boot into TempleShrine. HolyC launcher + mini-games; display + piezo."
     },
     {
       "id": "bitpirate",
