@@ -100,8 +100,8 @@
     <h3>Read a config chip over I2C</h3>
     <p>Some devices keep provisioning in a plain I2C EEPROM on their Qwiic bus. Wire the badge to that bus and dump it:</p>
     <pre><code><span class="c">&gt;</span> mode i2c
-<span class="c">&gt;</span> scan            <span class="c"># an EEPROM answers around 0x50</span>
-<span class="c">&gt;</span> read 0x50       <span class="c"># the config blob, in the clear</span></code></pre>
+<span class="c">&gt;</span> scan            <span class="c"># a config chip answers around 0x50</span>
+<span class="c">&gt;</span> dump 0x50       <span class="c"># the provisioning blob, in the clear</span></code></pre>
     <div class="callout info"><span class="h">// note</span> A scan only finds a chip that acts as an I2C <em>peripheral</em> (an EEPROM, a sensor). Two controllers on one bus won't see each other — so this path needs a real config chip on the target, which the workshop kit provides.</div>
 
     <h2>Running the room (for instructors)</h2>
