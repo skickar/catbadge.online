@@ -91,21 +91,19 @@
     <div class="callout danger"><span class="h">!! antenna first</span> Attach the 915&nbsp;MHz antenna before <code>send</code>. Transmitting without one can damage the radio.</div>
     <p>When your message lands on the wall, you've proven you can read and write a channel you were never given. First team to light up the wall (or to spam it to the target count) wins.</p>
 
-    <h2>Side paths for extra points</h2>
-    <h3>Bluetooth recon</h3>
-    <pre><code><span class="c">&gt;</span> mode bluetooth
-<span class="c">&gt;</span> scan     <span class="c"># the node advertises over BLE too — spot it by the last 4 of its ID</span></code></pre>
-    <p>Nodes like this often ship a <strong>fixed pairing PIN</strong> (a classic weak default). That's a second way in: pair over BLE and read the same config the network API gave you.</p>
-
-    <h3>Read a config chip over I2C</h3>
-    <p>Some devices keep provisioning in a plain I2C EEPROM on their Qwiic bus. Wire the badge to that bus and dump it:</p>
+    <h2>The same secret, a second way — over I2C <span class="g">(bonus)</span></h2>
+    <p>A device that leaks over one interface usually leaks over another. This target also answers on its
+    <strong>I2C bus</strong> like a cheap config chip. Wire the badge's Qwiic to the node's Qwiic, then:</p>
     <pre><code><span class="c">&gt;</span> mode i2c
-<span class="c">&gt;</span> scan            <span class="c"># a config chip answers around 0x50</span>
-<span class="c">&gt;</span> dump 0x50       <span class="c"># the provisioning blob, in the clear</span></code></pre>
-    <div class="callout info"><span class="h">// note</span> A scan only finds a chip that acts as an I2C <em>peripheral</em> (an EEPROM, a sensor). Two controllers on one bus won't see each other — so this path needs a real config chip on the target, which the workshop kit provides.</div>
+<span class="c">&gt;</span> scan            <span class="c"># a config "chip" answers at 0x50</span>
+<span class="c">&gt;</span> dump 0x50       <span class="c"># the Wi-Fi password, in the clear — no network needed</span></code></pre>
+    <p>Same password you decoded in step 2, pulled straight off the hardware bus — the point being that
+    an unlocked debug UART and an open I2C port both spill the same secret. Lock one, you've still got the other.</p>
+    <div class="callout info"><span class="h">// note — why not Bluetooth?</span> On an ESP32, Meshtastic <strong>turns Bluetooth off whenever Wi-Fi is on</strong> — they share one 2.4&nbsp;GHz radio. Since this node lives on Wi-Fi, it never advertises over BLE (you can stand right next to it and see nothing), so there's no Bluetooth way in here. A neat reminder that "enabled" features can silently disable each other.</div>
 
     <h2>Running the room (for instructors)</h2>
-    <p>The node is stock mesh firmware with one added "leaky provisioning" print and a known channel key. A small watchdog next to the chat wall restores the channel, key, name, and Wi-Fi if a team changes them, so a station heals itself between groups. Give each station its own network password and channel key so answers can't travel across the room.</p>
+    <p>The node is stock mesh firmware with a "leaky provisioning" print (UART + I2C) and a known channel key. Each station gets its own channel key and Wi-Fi password from a shared seed + station number, so answers can't travel the room and a wiped station re-stamps identically. A watchdog beside the chat wall restores the channel, key, name, and Wi-Fi if a team changes them — and on tamper it flashes a red <strong>INTRUSION</strong> banner on the wall instead of healing silently. The wall also keeps a <strong>CRACKED IT</strong> leaderboard of teams in the order they first break in.</p>
+    <div class="callout warn"><span class="h">!! bench tip</span> Use a known-good USB cable for the node. A flaky one flashes fine but silently wedges the node on small config writes — a maddening failure that looks like firmware but isn't.</div>
 
     <div class="step-nav">
       <a href="./">← all tutorials</a>
