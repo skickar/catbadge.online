@@ -1,17 +1,29 @@
 {
-  "_note": "Community-submitted, UNTESTED factory images for the badge. Each is served same-origin from community/firmware/ and flashed at 0x0. These are NOT hardware-verified by Retia \u2014 the site warns and gates every flash. Added by pull request; a maintainer validates with the catbadge-community-image skill. Schema per image: { id, name, author, source, desc, file, url, addr, sha256, submitted }.",
+  "_note": "Community-submitted, UNTESTED factory images for the badge. Each is served same-origin from community/firmware/ and flashed at 0x0. These are NOT hardware-verified by Retia — the site warns and gates every flash. Added by pull request; a maintainer validates with the catbadge-community-image skill. Schema per image: { id, name, author, source, desc, file, url, addr, sha256, submitted }.",
   "images": [
     {
       "id": "pusheen-danza",
       "name": "Pusheen Danza",
       "author": "skickar",
       "source": "https://github.com/skickar/badge-danza",
-      "desc": "A dancing Pusheen fills the screen while the Danza Kuduro horn hook plays on the piezo (transcribed from audio); a rainbow wave flows across the ear NeoPixels and the SAO LED flashes on the beat. Press A to mute. Display/LED/audio only \u2014 no radio, no TX. No SD card needed.",
+      "desc": "A dancing Pusheen fills the screen while the Danza Kuduro horn hook plays on the piezo (transcribed from audio); a rainbow wave flows across the ear NeoPixels and the SAO LED flashes on the beat. Press A to mute. Display/LED/audio only — no radio, no TX. No SD card needed.",
       "file": "pusheen-danza.factory.bin",
       "url": "firmware/pusheen-danza.factory.bin",
       "addr": 0,
       "sha256": "8f374510fa121bc76b3c279e5d6cd7c4e95c84741736d500b3a8738859ced6d9",
       "submitted": "2026-08-04"
+    },
+    {
+      "id": "bleuje-viewer",
+      "name": "bleuje loops",
+      "author": "Retia (animations: Etienne Jacob, with permission)",
+      "source": "https://github.com/RetiaLLC/bleuje-badge-viewer",
+      "desc": "Fullscreen gallery of Etienne Jacob (bleuje)'s perfect-loop generative animations, with on-badge curation (A keep / B cut, hold BOOT to purge). Needs an SD card with GIFs in /gifs — grab the ready-made 204-loop gallery pack (included with the artist's permission) and conversion recipes at the source link. Display/SD only — no radio, no TX. Boots to a 20s credits page.",
+      "file": "bleuje-viewer.factory.bin",
+      "url": "firmware/bleuje-viewer.factory.bin",
+      "addr": 0,
+      "sha256": "8a9dfbe8c7a95310e9fb360d9968f6cb31b27d64b002b452f97ed464c079b28a",
+      "submitted": "2026-08-05"
     }
   ]
 }
