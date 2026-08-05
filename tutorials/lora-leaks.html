@@ -99,9 +99,11 @@
     an unlocked debug UART and an open I2C port both spill the same secret. Lock one, you've still got the other.</p>
     <div class="callout info"><span class="h">// note — why not Bluetooth?</span> On an ESP32, Meshtastic <strong>turns Bluetooth off whenever Wi-Fi is on</strong> — they share one 2.4&nbsp;GHz radio. Since this node lives on Wi-Fi, it never advertises over BLE (you can stand right next to it and see nothing), so there's no Bluetooth way in here. A neat reminder that "enabled" features can silently disable each other.</div>
 
-    <h2>Running the room (for instructors)</h2>
-    <p>The node is stock mesh firmware with a "leaky provisioning" print (UART + I2C) and a known channel key. Each station gets its own channel key and Wi-Fi password from a shared seed + station number, so answers can't travel the room and a wiped station re-stamps identically. A watchdog beside the chat wall restores the channel, key, name, and Wi-Fi if a team changes them — and on tamper it flashes a red <strong>INTRUSION</strong> banner on the wall instead of healing silently. The wall also keeps a <strong>CRACKED IT</strong> leaderboard of teams in the order they first break in.</p>
-    <div class="callout warn"><span class="h">!! bench tip</span> Use a known-good USB cable for the node. A flaky one flashes fine but silently wedges the node on small config writes — a maddening failure that looks like firmware but isn't.</div>
+    <details style="margin:1.8rem 0;border:1px solid #d6008f55;border-radius:10px;padding:.5rem 1.1rem;background:#d6008f0d;">
+      <summary style="cursor:pointer;padding:.6rem 0;font-weight:700;color:#d6008f;">Running the room — for instructors <span style="opacity:.7;font-weight:400;">(spoilers &amp; setup — click to reveal)</span></summary>
+      <p>The node is stock mesh firmware with a "leaky provisioning" print (UART + I2C) and a known channel key. Each station gets its own channel key and Wi-Fi password from a shared seed + station number, so answers can't travel the room and a wiped station re-stamps identically. A watchdog beside the chat wall restores the channel, key, name, and Wi-Fi if a team changes them — and on tamper it flashes a red <strong>INTRUSION</strong> banner on the wall instead of healing silently. The wall also keeps a <strong>CRACKED IT</strong> leaderboard of teams in the order they first break in.</p>
+      <div class="callout warn"><span class="h">!! bench tip</span> Use a known-good USB cable for the node. A flaky one flashes fine but silently wedges the node on small config writes — a maddening failure that looks like firmware but isn't.</div>
+    </details>
 
     <div class="step-nav">
       <a href="./">← all tutorials</a>
