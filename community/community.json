@@ -1,4 +1,17 @@
 {
-  "_note": "Community-submitted, UNTESTED factory images for the badge. Each is served same-origin from community/firmware/ and flashed at 0x0. These are NOT hardware-verified by Retia — the site warns and gates every flash. Added by pull request; a maintainer validates with the catbadge-community-image skill. Schema per image: { id, name, author, source, desc, file, url, addr, sha256, submitted }.",
-  "images": []
+  "_note": "Community-submitted, UNTESTED factory images for the badge. Each is served same-origin from community/firmware/ and flashed at 0x0. These are NOT hardware-verified by Retia \u2014 the site warns and gates every flash. Added by pull request; a maintainer validates with the catbadge-community-image skill. Schema per image: { id, name, author, source, desc, file, url, addr, sha256, submitted }.",
+  "images": [
+    {
+      "id": "pusheen-danza",
+      "name": "Pusheen Danza",
+      "author": "skickar",
+      "source": "https://github.com/skickar/badge-danza",
+      "desc": "A dancing Pusheen fills the screen while the Danza Kuduro horn hook plays on the piezo (transcribed from audio); a rainbow wave flows across the ear NeoPixels and the SAO LED flashes on the beat. Press A to mute. Display/LED/audio only \u2014 no radio, no TX. No SD card needed.",
+      "file": "pusheen-danza.factory.bin",
+      "url": "firmware/pusheen-danza.factory.bin",
+      "addr": 0,
+      "sha256": "8f374510fa121bc76b3c279e5d6cd7c4e95c84741736d500b3a8738859ced6d9",
+      "submitted": "2026-08-04"
+    }
+  ]
 }
