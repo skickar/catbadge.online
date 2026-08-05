@@ -1,0 +1,4 @@
+{
+  "_note": "Community-submitted, UNTESTED factory images for the badge. Each is served same-origin from community/firmware/ and flashed at 0x0. These are NOT hardware-verified by Retia — the site warns and gates every flash. Added by pull request; a maintainer validates with the catbadge-community-image skill. Schema per image: { id, name, author, source, desc, file, url, addr, sha256, submitted }.",
+  "images": []
+}

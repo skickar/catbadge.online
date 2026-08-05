@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community BINs — ScriptKitty DEF CON Badge</title>
+<meta name="description" content="Flash community-submitted badge firmware — untested and unverified. Submit your own by pull request.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Community BINs — ScriptKitty Badge">
+<meta property="og:description" content="Untested, community-submitted badge images. Flash at your own risk, or submit your own.">
+<meta property="og:image" content="https://www.catbadge.online/assets/badge-top-clean.png">
+<meta property="og:url" content="https://www.catbadge.online/community/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="../vendor/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../vendor/fonts.css">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../tutorials/tutorial.css">
+<script type="module" src="../vendor/esptool-init.js"></script>
+</head>
+<body>
+<nav class="t-nav">
+  <a href="../" class="wordmark" style="color:inherit;">=^..^= <span class="kw">SCRIPTKITTY</span>//BADGE</a>
+  <span class="spacer"></span>
+  <a href="../tutorials/" class="navlink">Tutorials</a>
+  <a href="./" class="navlink" style="color:#00a35f;">Community BINs</a>
+  <a href="https://github.com/RetiaLLC/DefconBadge2026" target="_blank" rel="noopener" class="navlink">GitHub</a>
+  <a href="../#flash" class="pill">[ flash ]</a>
+</nav>
+
+<div class="wrap">
+  <header style="padding:60px 0 8px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#d6008f; margin-bottom:10px;">[//] community_bins — flash at your own risk</div>
+    <h1 style="margin:0 0 12px; font-size:46px; font-weight:900; letter-spacing:-2px; color:#14181b; line-height:1.02;">Community BINs</h1>
+    <p style="font-size:17px; max-width:66ch; margin:0 0 22px;">Badge images built and shared by the community. Anyone can submit one — and anyone can flash them here, over Web Serial, the same way as the main catalog.</p>
+  </header>
+
+  <!-- the big warning -->
+  <div style="border:2px solid #d6008f; background:#fdf0f6; border-radius:14px; padding:20px 24px; margin:0 0 34px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-weight:700; color:#d6008f; font-size:15px; margin-bottom:8px;">!! these images are UNTESTED and UNVERIFIED</div>
+    <div style="font-size:14.5px; line-height:1.6;">Unlike the <a href="../#firmware">main firmware catalog</a> — every image there is hardware-verified — <strong>nothing on this page has been tested or vetted by Retia</strong>. A community image may not boot, may behave unexpectedly, may be transmit- or attack-capable, or may leave the badge needing manual recovery (hold <strong>GPIO_0</strong>, tap <strong>RESET</strong>). Flash these only on a badge you own, and only if you accept that risk. The site will ask you to confirm before every community flash. If one bricks the boot, recover and flash a known-good image from the main catalog.</div>
+  </div>
+
+  <!-- flasher -->
+  <div style="display:grid; grid-template-columns:1fr 1.1fr; gap:36px; align-items:start; margin-bottom:56px;" class="grid-2col">
+    <div style="display:grid; gap:18px;">
+      <label style="display:grid; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#98a09a;">select a community image
+        <select id="c-select" style="background:#fff; color:#14181b; border:1px solid #d5cfc0; border-radius:9px; padding:12px 14px; font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600;"></select>
+      </label>
+      <div id="c-desc" style="font-size:14px;">loading…</div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
+        <button id="c-flash" class="btn-dark" style="border:none; font-size:14px; padding:15px 26px; border-radius:10px; cursor:pointer;">[ CONNECT &amp; FLASH ]</button>
+        <button id="c-local" class="btn-outline" style="background:transparent; font-size:14px; padding:13px 22px; border-radius:10px; cursor:pointer;">[ FLASH LOCAL .BIN ]</button>
+        <input type="file" accept=".bin" id="c-file" style="display:none;">
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#98a09a; line-height:1.7;">every flash asks you to confirm it's untested first.<br>stuck? hold <span style="color:#14181b; font-weight:600;">GPIO_0</span>, tap <span style="color:#14181b; font-weight:600;">RESET</span>, release GPIO_0 → retry.</div>
+    </div>
+    <div style="border-radius:14px; background:#0c1310; box-shadow:0 20px 50px -18px rgba(20,24,27,0.4); overflow:hidden;">
+      <div style="display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid #1c2a24; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#5a7a68;">
+        <span style="width:9px; height:9px; border-radius:50%; background:#ff5566;"></span>
+        <span style="width:9px; height:9px; border-radius:50%; background:#ffb454;"></span>
+        <span style="width:9px; height:9px; border-radius:50%; background:#3dffa0;"></span>
+        <span style="margin-left:8px;">community_flash_log</span>
+        <span id="c-progress" style="margin-left:auto; color:#3dffa0;"></span>
+      </div>
+      <div style="position:relative;">
+        <pre id="c-log" style="margin:0; padding:16px 18px; height:340px; overflow:auto; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.65; color:#8fb8a3; white-space:pre-wrap; word-break:break-word;">// community flasher idle — pick an image (or your own .bin), plug the badge in, hit CONNECT
+// these images are UNTESTED and UNVERIFIED. read the banner above.</pre>
+        <div style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- submit -->
+  <div style="border-top:1px solid #e2ddd0; padding:40px 0 80px;">
+    <h2 style="margin:0 0 12px; font-size:30px; font-weight:800; letter-spacing:-1px; color:#14181b;">Submit your own image</h2>
+    <p style="font-size:16px; max-width:66ch; margin:0 0 18px;">Built something for the badge? Share it. Submissions come in by <strong>pull request</strong> to the site's repo — you add your merged <code class="chip">factory.bin</code> plus one JSON entry, a maintainer looks it over, and it shows up here (still labelled untested).</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:0 0 22px;" class="grid-2col">
+      <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:22px 24px;">
+        <div style="font-family:'IBM Plex Mono',monospace; color:#00a35f; font-size:13px; margin-bottom:10px;">// what you provide</div>
+        <ul style="margin:0; padding-left:20px; font-size:14.5px; line-height:1.7;">
+          <li><strong>Project name</strong></li>
+          <li><strong>Link to source</strong> (public repo)</li>
+          <li><strong>What it does</strong> — a sentence or two</li>
+          <li>A <strong>merged <code class="chip">factory.bin</code></strong> for the ESP32-S3 badge, flashable at <code class="chip">0x0</code></li>
+        </ul>
+      </div>
+      <div style="background:#fff; border:1px solid #e2ddd0; border-radius:14px; padding:22px 24px;">
+        <div style="font-family:'IBM Plex Mono',monospace; color:#00a35f; font-size:13px; margin-bottom:10px;">// how it lands</div>
+        <ol style="margin:0; padding-left:20px; font-size:14.5px; line-height:1.7;">
+          <li>Open the <a href="https://github.com/skickar/catbadge.online/issues/new?template=community-image.yml" target="_blank" rel="noopener">proposal form</a>, or go straight to a PR.</li>
+          <li>Add the <code class="chip">.bin</code> under <code class="chip">community/firmware/</code> + an entry in <code class="chip">community/community.json</code>.</li>
+          <li>A maintainer validates it and merges — it appears here on the next build.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <a href="https://github.com/skickar/catbadge.online/issues/new?template=community-image.yml" target="_blank" rel="noopener" class="btn-dark" style="font-size:14px; padding:14px 24px; border-radius:10px;">[ propose an image ]</a>
+      <a href="https://github.com/skickar/catbadge.online/blob/main/community/CONTRIBUTING.md" target="_blank" rel="noopener" class="btn-outline" style="font-family:'Archivo',sans-serif; font-weight:700; font-size:14px; padding:12px 22px; border-radius:10px;">read the submission guide</a>
+    </div>
+  </div>
+</div>
+
+<footer class="t-foot">
+  <div class="wrap">
+    <span># ScriptKitty DEF CON Badge — <a href="https://retia.io" target="_blank" rel="noopener">Retia LLC</a> × <a href="https://www.iotvillage.org" target="_blank" rel="noopener">IoT Village</a></span>
+    <span><a href="../">← back to the badge</a></span>
+  </div>
+</footer>
+
+<script src="community.js"></script>
+</body>
+</html>

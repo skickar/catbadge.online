@@ -1,0 +1,55 @@
+name: Community firmware image
+description: Propose a community badge image for the Community BINs flasher on catbadge.online
+title: "[community image] <project name>"
+labels: ["community-image"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing a badge image! A few things to know first:
+
+        - Community images are flashed **untested and unverified** on the site — the page warns and
+          gates every flash.
+        - This form is to **propose** an image. The image itself is added by a **pull request** that
+          drops your `factory.bin` into `community/firmware/` and adds an entry to
+          `community/community.json`. See [community/CONTRIBUTING.md](https://github.com/skickar/catbadge.online/blob/main/community/CONTRIBUTING.md).
+  - type: input
+    id: name
+    attributes:
+      label: Project name
+      placeholder: "My Cool Badge App"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Link to source
+      description: Public repository for the code.
+      placeholder: "https://github.com/you/project"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What it does
+      description: One or two sentences.
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Your handle / credit
+      placeholder: "@you"
+  - type: checkboxes
+    id: acks
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: "The image is a merged `factory.bin` for the ESP32-S3 badge, flashable at `0x0`."
+          required: true
+        - label: "I'll open a pull request adding the `.bin` (this form alone does not add it)."
+          required: true
+        - label: "I understand it will be listed as UNTESTED / UNVERIFIED."
+          required: true
+        - label: "If it can transmit or attack (Wi-Fi/BLE/RF), I've said so in 'What it does'."
+          required: false
