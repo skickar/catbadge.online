@@ -15,15 +15,15 @@
   },
   "tutorials": [
     {
-      "id": "ghost-beacon-ctf",
-      "title": "Ghost Beacon: from a UART tap to a private LoRa chat",
-      "summary": "A classroom capture-the-flag. One badge running Bit Pirate walks a full chain against a weak IoT node: tap its UART, recover the Wi-Fi it joins, find it on the network, read the secret key off its LoRa channel, then transmit on that channel. Covers the credential leak, the port-scan gotcha, the Bluetooth and I2C side paths, and the chat-wall finale.",
+      "id": "lora-leaks",
+      "title": "LoRa Leaks — Exploit a vulnerable IoT Mesh node",
+      "summary": "A ScriptKitty Village × IoT Village CTF, by Retia. Use the badge's ESP32 BitPirate to tap a Nibble Zero's UART and i2c ports, scan the network and talk to the target, then use the onboard LoRa radio to break into an encrypted private chat. Five flags, each unlocking the next — spam the chat and win a prize at the booth.",
       "tags": ["badge", "bit-pirate", "ctf", "lora", "rf"],
       "difficulty": "intermediate",
       "minutes": 60,
       "updated": "2026-08-05",
       "author": "Retia",
-      "url": "ghost-beacon-ctf.html"
+      "url": "lora-leaks.html"
     },
     {
       "id": "bit-pirate-lora-i2c",
