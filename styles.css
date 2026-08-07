@@ -10,6 +10,19 @@ a:hover { color: #d6008f; }
 .nav-link { color: #14181b; }
 .nav-link:hover { color: #00a35f; }
 .nav-word:hover { color: #00a35f; }
+.nav-buy { color: #d6008f; }
+.nav-buy:hover { color: #b0006f; }
+
+/* commerce CTA — buy the badge (retia.io storefront) */
+.btn-buy {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  background: #d6008f;
+  color: #fff;
+  white-space: nowrap;
+}
+.btn-buy:hover { background: #b0006f; color: #fff; }
 
 /* ---- left-rail chapter nav (blog-style TOC with scrollspy) ---- */
 .chapters { font-family: 'IBM Plex Mono', monospace; }
