@@ -24,6 +24,18 @@
       "addr": 0,
       "sha256": "8a9dfbe8c7a95310e9fb360d9968f6cb31b27d64b002b452f97ed464c079b28a",
       "submitted": "2026-08-05"
+    },
+    {
+      "id": "pocket-server-badge",
+      "name": "Pocket Server",
+      "author": "skickar",
+      "source": "https://github.com/skickar/pocket-server/tree/badge-port-standalone",
+      "desc": "Turns the badge into a self-contained Wi-Fi file server and web host: it broadcasts its own access point, and any phone or laptop that joins can browse, upload and download files or open a hosted page — no internet needed. The TFT shows the network name, password and a QR code that joins the Wi-Fi when scanned, then points you at the portal. Serves from a FAT microSD, or internal flash if no card is present. Display / Wi-Fi / SD only — no radio, no TX. Note: SD-over-SPI on the badge's shared display bus is code-complete but not yet confirmed with a card in the badge; the portal itself loads either way.",
+      "file": "pocket-server-badge.factory.bin",
+      "url": "firmware/pocket-server-badge.factory.bin",
+      "addr": 0,
+      "sha256": "cb43de07748368dfd998e97ad44a5437a293552b3931fb37a8119441900c041d",
+      "submitted": "2026-08-08"
     }
   ]
 }
